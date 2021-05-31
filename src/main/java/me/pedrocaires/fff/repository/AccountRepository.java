@@ -1,5 +1,6 @@
 package me.pedrocaires.fff.repository;
 
+import me.pedrocaires.fff.domain.entity.Account;
 import me.pedrocaires.fff.domain.request.CreateAccountRequest;
 import me.pedrocaires.fff.domain.response.CreateAccountResponse;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,8 +17,14 @@ public class AccountRepository {
         this.returningIdCallbackHandler = returningIdCallbackHandler;
     }
 
-    public int insert(CreateAccountRequest createAccountRequest){
-        return jdbcTemplate.query("INSERT INTO ACCOUNTS(NAME) VALUES (?) RETURNING ID",
-                returningIdCallbackHandler, createAccountRequest.getName());
+    public Account insert(CreateAccountRequest createAccountRequest){
+        return jdbcTemplate.query("INSERT INTO ACCOUNTS(NAME) VALUES (?) RETURNING ID, NAME",
+                resultSet -> {
+                    resultSet.next();
+                    var account = new Account();
+                    account.setId(resultSet.getInt("ID"));
+                    account.setName(resultSet.getString("NAME"));
+                    return account;
+                }, createAccountRequest.getName());
     }
 }

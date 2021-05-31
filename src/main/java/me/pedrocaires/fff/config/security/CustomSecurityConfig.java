@@ -21,7 +21,7 @@ public class CustomSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        var unAuthEndpoints = new String[]{"/swagger-ui/**", "/v3/**", "/swagger-resources/**", "/user/login"};
+        var unAuthEndpoints = new String[]{"/swagger-ui/**", "/v3/**", "/swagger-resources/**", "/user","/user/login", "/account"};
         http.cors()
             .and().csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

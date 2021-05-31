@@ -36,7 +36,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         try {
             if(token != null){
                 var user = jwtService.validateToken(token.replace("Bearer ", ""));
-                userService.setSecurityContextHolder(user);
+                userService.setAuthenticatedUser(user);
             }
             filterChain.doFilter(httpServletRequest, httpServletResponse);
         } catch (UnauthorizedException ex){

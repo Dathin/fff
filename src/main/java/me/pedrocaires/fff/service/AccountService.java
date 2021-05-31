@@ -15,10 +15,11 @@ public class AccountService {
     }
 
     public CreateAccountResponse createAccount(CreateAccountRequest createAccountRequest){
-        var insertedId = accountRepository.insert(createAccountRequest);
+        //Usar mapstruct
+        var account = accountRepository.insert(createAccountRequest);
         var createAccountResponse = new CreateAccountResponse();
-        createAccountResponse.setId(insertedId);
-        createAccountResponse.setName(createAccountRequest.getName());
+        createAccountResponse.setId(account.getId());
+        createAccountResponse.setName(account.getName());
         return createAccountResponse;
     }
 

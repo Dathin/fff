@@ -5,8 +5,13 @@ import me.pedrocaires.fff.domain.request.CreateUserRequest;
 import me.pedrocaires.fff.domain.request.LoginRequest;
 import me.pedrocaires.fff.domain.response.CreateUserResponse;
 import me.pedrocaires.fff.domain.response.LoginResponse;
+import me.pedrocaires.fff.exception.AccountDoesNotExistException;
+import me.pedrocaires.fff.exception.InvalidCreateUserOnAccount;
+import me.pedrocaires.fff.exception.UserAlreadyExistException;
 import me.pedrocaires.fff.exception.UserDoesNotExistException;
 import me.pedrocaires.fff.repository.UserRepository;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +19,7 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedA
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -30,21 +36,34 @@ public class UserService {
 
 
     public CreateUserResponse createUser(CreateUserRequest createUserRequest) {
-        // TODO: Verificar se esse cara deveria estar sendo inserido na conta
-        //Verificar se a conta existe
-        //Verificar quando o cara cria uma conta nova ou vem de uma conta existente
-        //Verificar quand bate na unique constraint
-        //Padrão de insert pra esse cara e pro de account
-        //Refatorar pastas
-        // Auth
         var bcryptedPassword =  passwordEncoder.encode(createUserRequest.getPassword());
         createUserRequest.setPassword(bcryptedPassword);
-        var insertedId = userRepository.insert(createUserRequest);
-        var createUserResponse = new CreateUserResponse();
-        createUserResponse.setId(insertedId);
-        createUserResponse.setName(createUserRequest.getName());
-        createUserResponse.setAccountId(createUserRequest.getAccountId());
-        return createUserResponse;
+        var optionalAuthenticatedUser = getAuthenticatedUser();
+        try {
+                if (optionalAuthenticatedUser.isPresent()){
+                var authenticatedUser = optionalAuthenticatedUser.get();
+                createUserRequest.setAccountId(authenticatedUser.getAccountId());
+                var user = userRepository.insert(createUserRequest);
+                var createUserResponse = new CreateUserResponse();
+                createUserResponse.setId(user.getId());
+                createUserResponse.setName(user.getName());
+                createUserResponse.setAccountId(user.getAccountId());
+                return createUserResponse;
+                }
+                if (userRepository.countByAccountId(createUserRequest.getAccountId()) > 1){
+                    var user = userRepository.insert(createUserRequest);
+                    var createUserResponse = new CreateUserResponse();
+                    createUserResponse.setId(user.getId());
+                    createUserResponse.setName(user.getName());
+                    createUserResponse.setAccountId(user.getAccountId());
+                    return createUserResponse;
+                }
+                throw new InvalidCreateUserOnAccount();
+            } catch (DuplicateKeyException ex){
+                throw new UserAlreadyExistException();
+            } catch (DataIntegrityViolationException ex){
+                throw new AccountDoesNotExistException();
+            }
     }
 
     public LoginResponse login(LoginRequest loginRequest){
@@ -59,11 +78,15 @@ public class UserService {
         throw new UserDoesNotExistException();
     }
 
-    public User getSecurityContextHolder(){
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public Optional<User> getAuthenticatedUser(){
+        var user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (user instanceof User) {
+            return Optional.of((User) user);
+        }
+        return Optional.empty();
     }
 
-    public void setSecurityContextHolder(User user){
+    public void setAuthenticatedUser(User user){
         Authentication authentication = new PreAuthenticatedAuthenticationToken(
                 user, null, Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);

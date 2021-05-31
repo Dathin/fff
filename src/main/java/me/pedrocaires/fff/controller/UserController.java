@@ -23,7 +23,6 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<CreateUserResponse> createUser(@RequestBody CreateUserRequest createUserRequest){
-        var user =  userService.getSecurityContextHolder();
         return ResponseEntity.ok(userService.createUser(createUserRequest));
     }
 
