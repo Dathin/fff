@@ -23,7 +23,7 @@ import java.util.List;
 @EnableSwagger2
 public class SwaggerConfig {
     @Bean
-    public Docket greetingApi() {
+    public Docket fffApi() {
 
         return new Docket(DocumentationType.OAS_30)
                 .useDefaultResponseMessages(false)
