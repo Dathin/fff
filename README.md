@@ -13,9 +13,3 @@ mvn liquibase:update
 drop table databasechangelog;
 drop table databasechangeloglock;
 ```
-
-TODO
-- Mapstruct
-- Folder refacotr
-- Elsewhere endpoints
-- Client
