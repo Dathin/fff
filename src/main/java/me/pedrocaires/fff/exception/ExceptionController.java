@@ -12,6 +12,8 @@ public class ExceptionController {
 
     private final Logger logger = LoggerFactory.getLogger(ExceptionController.class);
 
+    protected final String unusualMessage =  "Something unusual happened, please try again";
+
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ExceptionResponse> handleCustomException(CustomException ex){
         return buildDefaultExceptionResponseEntity(ex, ex.getMessage(), ex.getHttpStatus());
@@ -19,7 +21,7 @@ public class ExceptionController {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(Exception ex){
-        return buildDefaultExceptionResponseEntity(ex, "Something unusual happened, please try again", HttpStatus.INTERNAL_SERVER_ERROR);
+        return buildDefaultExceptionResponseEntity(ex, unusualMessage, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private ResponseEntity<ExceptionResponse> buildDefaultExceptionResponseEntity(Exception ex, String message, HttpStatus httpStatus){

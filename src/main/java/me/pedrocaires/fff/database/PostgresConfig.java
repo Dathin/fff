@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import javax.sql.DataSource;
 
 @Configuration
-public class Postgres {
+public class PostgresConfig {
 
     @Bean
     @ConfigurationProperties(prefix = "spring.postgres")
