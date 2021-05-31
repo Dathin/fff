@@ -18,7 +18,7 @@ import java.io.IOException;
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
 
-    private final Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
+    private final Logger securityFilterLogger = LoggerFactory.getLogger(SecurityFilter.class);
 
     private final JwtService jwtService;
 
@@ -42,7 +42,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(httpServletRequest, httpServletResponse);
         } catch (UnauthorizedException ex){
-            logger.error("Security filter caught", ex);
+            securityFilterLogger.error("Security filter caught", ex);
             securityFilterExceptionHandler.commence(httpServletRequest, httpServletResponse, new CustomAuthenticationException(ex.getMessage()));
         }
     }
