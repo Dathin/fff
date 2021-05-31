@@ -3,6 +3,8 @@ package me.pedrocaires.fff.security;
 import me.pedrocaires.fff.exception.CustomAuthenticationException;
 import me.pedrocaires.fff.exception.UnauthorizedException;
 import me.pedrocaires.fff.user.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -15,6 +17,8 @@ import java.io.IOException;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
+
+    private final Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
 
     private final JwtService jwtService;
 
@@ -38,7 +42,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(httpServletRequest, httpServletResponse);
         } catch (UnauthorizedException ex){
-            ex.printStackTrace();
+            logger.error("Security filter caught", ex);
             securityFilterExceptionHandler.commence(httpServletRequest, httpServletResponse, new CustomAuthenticationException(ex.getMessage()));
         }
     }

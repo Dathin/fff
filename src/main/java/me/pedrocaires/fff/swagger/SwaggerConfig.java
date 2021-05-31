@@ -46,8 +46,8 @@ public class SwaggerConfig {
     }
 
     private List<SecurityReference> defaultAuth(){
-        AuthorizationScope authorizationScope = new AuthorizationScope("global", "Identify you and your account to access restrict content");
-        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+        var authorizationScope = new AuthorizationScope("global", "Identify you and your account to access restrict content");
+        var authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
         return Collections.singletonList(new SecurityReference("Bearer auth token",
                 authorizationScopes));

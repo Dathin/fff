@@ -73,8 +73,7 @@ public class UserService {
 
     public LoginResponse login(LoginRequest loginRequest) {
         var optionalUser = userRepository.getPasswordToLogin(loginRequest);
-        optionalUser.orElseThrow(UserDoesNotExistException::new);
-        var user = optionalUser.get();
+        var user = optionalUser.orElseThrow(UserDoesNotExistException::new);
         return checkPassword(user, loginRequest);
     }
 

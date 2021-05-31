@@ -23,6 +23,7 @@
         <sonar.projectKey>Dathin_fff</sonar.projectKey>
         <sonar.organization>dathin</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.exclusions>src/**/model/*.java</sonar.exclusions>
     </properties>
     <dependencies>
         <dependency>
