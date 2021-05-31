@@ -1,7 +1,6 @@
 package me.pedrocaires.fff.user;
 
 import me.pedrocaires.fff.daoutils.ReturningCountCallbackHandler;
-import me.pedrocaires.fff.daoutils.ReturningIdCallbackHandler;
 import me.pedrocaires.fff.user.model.CreateUserRequest;
 import me.pedrocaires.fff.user.model.LoginRequest;
 import me.pedrocaires.fff.user.model.User;
@@ -32,7 +31,7 @@ public class UserRepository {
         return resultSetUser(resultSet);
     };
 
-    public UserRepository(JdbcTemplate jdbcTemplate, ReturningIdCallbackHandler returningIdCallbackHandler, ReturningCountCallbackHandler returningCountCallbackHandler) {
+    public UserRepository(JdbcTemplate jdbcTemplate, ReturningCountCallbackHandler returningCountCallbackHandler) {
         this.jdbcTemplate = jdbcTemplate;
         this.returningCountCallbackHandler = returningCountCallbackHandler;
     }

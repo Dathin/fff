@@ -34,13 +34,17 @@ public class SecurityFilter extends OncePerRequestFilter {
         var token = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
         try {
             if(token != null){
-                var user = jwtService.validateToken(token.replace("Bearer ", ""));
-                userService.setAuthenticatedUser(user);
+                setUserFromToken(token);
             }
             filterChain.doFilter(httpServletRequest, httpServletResponse);
         } catch (UnauthorizedException ex){
             ex.printStackTrace();
             securityFilterExceptionHandler.commence(httpServletRequest, httpServletResponse, new CustomAuthenticationException(ex.getMessage()));
         }
+    }
+
+    private void setUserFromToken(String token) {
+        var user = jwtService.validateToken(token.replace("Bearer ", ""));
+        userService.setAuthenticatedUser(user);
     }
 }

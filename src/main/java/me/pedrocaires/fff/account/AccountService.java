@@ -8,18 +8,16 @@ import org.springframework.stereotype.Service;
 public class AccountService {
 
     private final AccountRepository accountRepository;
+    private final AccountMapper accountMapper;
 
-    public AccountService(AccountRepository accountRepository) {
+    public AccountService(AccountRepository accountRepository, AccountMapper accountMapper) {
         this.accountRepository = accountRepository;
+        this.accountMapper = accountMapper;
     }
 
     public CreateAccountResponse createAccount(CreateAccountRequest createAccountRequest){
-        //Usar mapstruct
         var account = accountRepository.insert(createAccountRequest);
-        var createAccountResponse = new CreateAccountResponse();
-        createAccountResponse.setId(account.getId());
-        createAccountResponse.setName(account.getName());
-        return createAccountResponse;
+        return accountMapper.accountToAccountResponse(account);
     }
 
 }
