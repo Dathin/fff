@@ -56,7 +56,7 @@ public class SwaggerConfig {
     private ApiInfo metaData() {
         return new ApiInfoBuilder()
                 .title("Free Feature Flag API")
-                .description("This is the first version of fff api")
+                .description("This is the first version of FFF api")
                 .version("1.0.0")
                 .license("Apache License Version 2.0")
                 .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0.html")
