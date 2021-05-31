@@ -15,7 +15,6 @@ import java.util.Optional;
 public class UserRepository {
 
     private final JdbcTemplate jdbcTemplate;
-    private final ReturningIdCallbackHandler returningIdCallbackHandler;
     private final ReturningCountCallbackHandler returningCountCallbackHandler;
 
     private final ResultSetExtractor<Optional<User>> optionalUserResultSetExtractor = resultSet -> {
@@ -26,16 +25,18 @@ public class UserRepository {
         return Optional.empty();
     };
 
-    private final ResultSetExtractor<User> userResultSetExtractor = this::resultSetUser;
+    private final ResultSetExtractor<User> userResultSetExtractor = resultSet -> {
+        resultSet.next();
+        return resultSetUser(resultSet);
+    };
 
     public UserRepository(JdbcTemplate jdbcTemplate, ReturningIdCallbackHandler returningIdCallbackHandler, ReturningCountCallbackHandler returningCountCallbackHandler) {
         this.jdbcTemplate = jdbcTemplate;
-        this.returningIdCallbackHandler = returningIdCallbackHandler;
         this.returningCountCallbackHandler = returningCountCallbackHandler;
     }
 
     public User insert(CreateUserRequest createUserRequest){
-        return jdbcTemplate.query("INSERT INTO USERS (NAME, ACCOUNT_ID, PASSWORD) VALUES (?, ?, ?) RETURNING ID",
+        return jdbcTemplate.query("INSERT INTO USERS (NAME, ACCOUNT_ID, PASSWORD) VALUES (?, ?, ?) RETURNING ID, NAME, ACCOUNT_ID, PASSWORD",
                 userResultSetExtractor, createUserRequest.getName(), createUserRequest.getAccountId(), createUserRequest.getPassword());
     }
 

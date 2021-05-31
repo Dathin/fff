@@ -9,6 +9,7 @@ import me.pedrocaires.fff.exception.AccountDoesNotExistException;
 import me.pedrocaires.fff.exception.InvalidCreateUserOnAccount;
 import me.pedrocaires.fff.exception.UserAlreadyExistException;
 import me.pedrocaires.fff.exception.UserDoesNotExistException;
+import me.pedrocaires.fff.mapper.UserMapper;
 import me.pedrocaires.fff.repository.UserRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -27,11 +28,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.userMapper = userMapper;
     }
 
 
@@ -44,19 +47,11 @@ public class UserService {
                 var authenticatedUser = optionalAuthenticatedUser.get();
                 createUserRequest.setAccountId(authenticatedUser.getAccountId());
                 var user = userRepository.insert(createUserRequest);
-                var createUserResponse = new CreateUserResponse();
-                createUserResponse.setId(user.getId());
-                createUserResponse.setName(user.getName());
-                createUserResponse.setAccountId(user.getAccountId());
-                return createUserResponse;
+                return userMapper.userToCreateUserResponse(user);
                 }
-                if (userRepository.countByAccountId(createUserRequest.getAccountId()) > 1){
+                if (userRepository.countByAccountId(createUserRequest.getAccountId()) == 0){
                     var user = userRepository.insert(createUserRequest);
-                    var createUserResponse = new CreateUserResponse();
-                    createUserResponse.setId(user.getId());
-                    createUserResponse.setName(user.getName());
-                    createUserResponse.setAccountId(user.getAccountId());
-                    return createUserResponse;
+                    return userMapper.userToCreateUserResponse(user);
                 }
                 throw new InvalidCreateUserOnAccount();
             } catch (DuplicateKeyException ex){
