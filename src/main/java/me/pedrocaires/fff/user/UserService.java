@@ -84,17 +84,17 @@ public class UserService {
         throw new UserDoesNotExistException();
     }
 
-    public Optional<User> getAuthenticatedUser() {
-        var user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (user instanceof User) {
-            return Optional.of((User) user);
+    public Optional<UserToken> getAuthenticatedUser() {
+        var userToken = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (userToken instanceof UserToken) {
+            return Optional.of((UserToken) userToken);
         }
         return Optional.empty();
     }
 
-    public void setAuthenticatedUser(User user) {
+    public void setAuthenticatedUser(UserToken userToken) {
         Authentication authentication = new PreAuthenticatedAuthenticationToken(
-                user, null, Collections.emptyList());
+                userToken, null, Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }

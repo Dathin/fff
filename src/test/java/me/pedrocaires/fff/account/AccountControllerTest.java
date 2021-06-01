@@ -23,25 +23,16 @@ class AccountControllerTest {
     AccountController accountController;
 
     @Test
-    void shouldCallCreateAccount() {
-        var createAccountRequest = new CreateAccountRequest();
-        var createAccountResponse = new CreateAccountResponse();
-        when(accountService.createAccount(createAccountRequest)).thenReturn(createAccountResponse);
-
-        accountController.createAccount(createAccountRequest);
-
-        verify(accountService).createAccount(createAccountRequest);
-    }
-
-    @Test
-    void shouldReturnOKResponseEntityWithBody() {
+    void shouldCreateAccount() {
         var createAccountRequest = new CreateAccountRequest();
         var createAccountResponse = new CreateAccountResponse();
         when(accountService.createAccount(createAccountRequest)).thenReturn(createAccountResponse);
 
         var createdAccountResponseEntity = accountController.createAccount(createAccountRequest);
 
+        verify(accountService).createAccount(createAccountRequest);
         assertEquals(HttpStatus.OK, createdAccountResponseEntity.getStatusCode());
         assertEquals(createAccountResponse, createdAccountResponseEntity.getBody());
     }
+
 }
