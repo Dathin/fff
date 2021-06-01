@@ -4,7 +4,6 @@ import me.pedrocaires.fff.exception.AccountDoesNotExistException;
 import me.pedrocaires.fff.exception.InvalidCreateUserOnAccount;
 import me.pedrocaires.fff.exception.UserAlreadyExistException;
 import me.pedrocaires.fff.exception.UserDoesNotExistException;
-import me.pedrocaires.fff.security.JwtService;
 import me.pedrocaires.fff.user.model.*;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
