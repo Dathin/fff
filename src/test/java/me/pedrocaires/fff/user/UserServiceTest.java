@@ -176,13 +176,6 @@ class UserServiceTest {
         assertTrue(authenticatedUser.isEmpty());
     }
 
-    @Test
-    void shouldSetAuthenticatedUser() {
-        var userToken = new UserToken();
-
-        userService.setAuthenticatedUser(userToken);
-    }
-
     private void mockAuthenticationWithoutUser(){
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
