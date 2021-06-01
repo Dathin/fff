@@ -2,6 +2,7 @@ package me.pedrocaires.fff.security;
 
 import me.pedrocaires.fff.exception.CustomAuthenticationException;
 import me.pedrocaires.fff.exception.UnauthorizedException;
+import me.pedrocaires.fff.user.JwtService;
 import me.pedrocaires.fff.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

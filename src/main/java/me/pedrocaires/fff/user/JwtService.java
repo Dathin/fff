@@ -1,9 +1,10 @@
-package me.pedrocaires.fff.security;
+package me.pedrocaires.fff.user;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import me.pedrocaires.fff.exception.UnauthorizedException;
 import me.pedrocaires.fff.user.model.User;
+import me.pedrocaires.fff.user.model.UserToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -32,14 +33,15 @@ public class JwtService {
                 .signWith(key).compact();
     }
 
-    public User validateToken(String token) {
+    public UserToken validateToken(String token) {
         try {
             var claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-            var user = new User();
-            user.setId(claims.get("userId", Integer.class));
-            user.setName(claims.get("userName", String.class));
-            user.setAccountId(claims.get("accountId", Integer.class));
-            return user;
+            var userToken = new UserToken();
+            userToken.setId(claims.get("userId", Integer.class));
+            userToken.setName(claims.get("userName", String.class));
+            userToken.setAccountId(claims.get("accountId", Integer.class));
+            userToken.setExpiresAt(claims.getExpiration());
+            return userToken;
         } catch (JwtException | NullPointerException ex) {
             throw new UnauthorizedException();
         }
