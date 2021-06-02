@@ -1,14 +1,13 @@
-- Sonarq
-- Unit test
+- USER e-mail, multiplas accounts
 - USER GET
 - ACCOUNT GET
 - ENVIRONMENT
 - FF
 - Client
 - Web
-- Spring format
 - Migrations
 - USER e-mail, multiplas accounts
+- Spring format
 
 swagger, spring secutiry, redis, unit test, default error handling
 
