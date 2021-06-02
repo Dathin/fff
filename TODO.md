@@ -1,4 +1,3 @@
-- USER e-mail, multiplas accounts
 - USER GET
 - ACCOUNT GET
 - ENVIRONMENT
