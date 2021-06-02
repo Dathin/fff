@@ -12,6 +12,8 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpHeaders;
+import uk.co.jemos.podam.api.PodamFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -25,6 +27,8 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class SecurityFilterTest {
+
+	PodamFactory podamFactory = new PodamFactoryImpl();
 
 	@Mock
 	JwtService jwtService;
@@ -61,7 +65,7 @@ class SecurityFilterTest {
 	@Test
 	void shouldSetUserFromToken() throws ServletException, IOException {
 		var token = "notNullToken";
-		var userToken = new UserToken();
+		var userToken = podamFactory.manufacturePojo(UserToken.class);
 		when(httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(token);
 		when(jwtService.validateToken(token)).thenReturn(userToken);
 

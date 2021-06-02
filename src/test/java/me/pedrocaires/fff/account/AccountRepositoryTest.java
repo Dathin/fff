@@ -9,6 +9,8 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import uk.co.jemos.podam.api.PodamFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -16,6 +18,8 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class AccountRepositoryTest {
+
+	PodamFactory podamFactory = new PodamFactoryImpl();
 
 	@Mock
 	JdbcTemplate jdbcTemplate;
@@ -25,10 +29,10 @@ class AccountRepositoryTest {
 
 	@Test
 	void shouldPassAccountInfoToInsert() {
-		var createAccountRequest = new CreateAccountRequest();
+		var createAccountRequest = podamFactory.manufacturePojo(CreateAccountRequest.class);
 		createAccountRequest.setName("test-name");
 
-		var account = accountRepository.insert(createAccountRequest);
+		accountRepository.insert(createAccountRequest);
 
 		verify(jdbcTemplate).query(any(), any(ResultSetExtractor.class), eq(createAccountRequest.getName()));
 	}

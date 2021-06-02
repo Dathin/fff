@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -20,6 +21,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import uk.co.jemos.podam.api.PodamFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 import java.util.Optional;
 
@@ -30,6 +33,8 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
+	PodamFactory podamFactory = new PodamFactoryImpl();
+
 	@Mock
 	UserRepository userRepository;
 
@@ -39,8 +44,8 @@ class UserServiceTest {
 	@Mock
 	JwtService jwtService;
 
-	@Mock
-	UserMapper userMapper;
+	@Spy
+	UserMapper userMapper = new UserMapperImpl();
 
 	@Mock
 	CreateUserRequest createUserRequest;
@@ -62,10 +67,10 @@ class UserServiceTest {
 	@Test
 	void shouldInsertNewUserAtAuthenticatedUserAccount() {
 		var accountId = 1;
-		var userToken = new UserToken();
+		var userToken = podamFactory.manufacturePojo(UserToken.class);
 		userToken.setAccountId(accountId);
 		userService.setAuthenticatedUser(userToken);
-		var user = new User();
+		var user = podamFactory.manufacturePojo(User.class);
 		when(userRepository.insert(createUserRequest)).thenReturn(user);
 
 		userService.createUser(createUserRequest);
@@ -122,9 +127,9 @@ class UserServiceTest {
 
 	@Test
 	void shouldLogin() {
-		var user = new User();
+		var user = podamFactory.manufacturePojo(User.class);
 		var optionalUser = Optional.of(user);
-		var loginRequest = new LoginRequest();
+		var loginRequest = podamFactory.manufacturePojo(LoginRequest.class);
 		when(userRepository.getPasswordToLogin(loginRequest)).thenReturn(optionalUser);
 		when(passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())).thenReturn(true);
 		var token = "myToken";
@@ -140,7 +145,7 @@ class UserServiceTest {
 	void shouldThrowUserDoesNotExistExceptionWhenInvalidNameAndEmail() {
 		User user = null;
 		var optionalUser = Optional.ofNullable(user);
-		var loginRequest = new LoginRequest();
+		var loginRequest = podamFactory.manufacturePojo(LoginRequest.class);
 		when(userRepository.getPasswordToLogin(loginRequest)).thenReturn(optionalUser);
 
 		assertThrows(UserDoesNotExistException.class, () -> userService.login(loginRequest));
@@ -148,9 +153,9 @@ class UserServiceTest {
 
 	@Test
 	void shouldThrowUserDoesNotExistExceptionWhenInvalidPassword() {
-		User user = new User();
+		User user = podamFactory.manufacturePojo(User.class);
 		var optionalUser = Optional.ofNullable(user);
-		var loginRequest = new LoginRequest();
+		var loginRequest = podamFactory.manufacturePojo(LoginRequest.class);
 		when(userRepository.getPasswordToLogin(loginRequest)).thenReturn(optionalUser);
 		when(passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())).thenReturn(false);
 
@@ -159,7 +164,7 @@ class UserServiceTest {
 
 	@Test
 	void shouldGetAuthenticatedUser() {
-		var userToken = new UserToken();
+		var userToken = podamFactory.manufacturePojo(UserToken.class);
 		userService.setAuthenticatedUser(userToken);
 
 		var authenticatedUser = userService.getAuthenticatedUser();
