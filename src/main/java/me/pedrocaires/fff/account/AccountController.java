@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/account")
 public class AccountController {
 
-    private final AccountService accountService;
+	private final AccountService accountService;
 
-    public AccountController(AccountService accountService) {
-        this.accountService = accountService;
-    }
+	public AccountController(AccountService accountService) {
+		this.accountService = accountService;
+	}
 
-    @PostMapping
-    public ResponseEntity<CreateAccountResponse> createAccount(@RequestBody CreateAccountRequest createAccountRequest){
-        return ResponseEntity.ok(accountService.createAccount(createAccountRequest));
-    }
+	@PostMapping
+	public ResponseEntity<CreateAccountResponse> createAccount(@RequestBody CreateAccountRequest createAccountRequest) {
+		return ResponseEntity.ok(accountService.createAccount(createAccountRequest));
+	}
 
 }

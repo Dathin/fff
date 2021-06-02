@@ -16,23 +16,23 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class AccountControllerTest {
 
-    @Mock
-    AccountService accountService;
+	@Mock
+	AccountService accountService;
 
-    @InjectMocks
-    AccountController accountController;
+	@InjectMocks
+	AccountController accountController;
 
-    @Test
-    void shouldCreateAccount() {
-        var createAccountRequest = new CreateAccountRequest();
-        var createAccountResponse = new CreateAccountResponse();
-        when(accountService.createAccount(createAccountRequest)).thenReturn(createAccountResponse);
+	@Test
+	void shouldCreateAccount() {
+		var createAccountRequest = new CreateAccountRequest();
+		var createAccountResponse = new CreateAccountResponse();
+		when(accountService.createAccount(createAccountRequest)).thenReturn(createAccountResponse);
 
-        var createdAccountResponseEntity = accountController.createAccount(createAccountRequest);
+		var createdAccountResponseEntity = accountController.createAccount(createAccountRequest);
 
-        verify(accountService).createAccount(createAccountRequest);
-        assertEquals(HttpStatus.OK, createdAccountResponseEntity.getStatusCode());
-        assertEquals(createAccountResponse, createdAccountResponseEntity.getBody());
-    }
+		verify(accountService).createAccount(createAccountRequest);
+		assertEquals(HttpStatus.OK, createdAccountResponseEntity.getStatusCode());
+		assertEquals(createAccountResponse, createdAccountResponseEntity.getBody());
+	}
 
 }

@@ -10,9 +10,10 @@ import java.sql.SQLException;
 @Component
 public class ReturningCountCallbackHandler implements ResultSetExtractor<Integer> {
 
-@Override
-public Integer extractData(ResultSet resultSet) throws SQLException, DataAccessException {
-        resultSet.next();
-        return resultSet.getInt(1);
-    }
+	@Override
+	public Integer extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+		resultSet.next();
+		return resultSet.getInt(1);
+	}
+
 }

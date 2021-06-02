@@ -10,23 +10,24 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ExceptionController {
 
-    private final Logger logger = LoggerFactory.getLogger(ExceptionController.class);
+	private final Logger logger = LoggerFactory.getLogger(ExceptionController.class);
 
-    protected final String unusualMessage =  "Something unusual happened, please try again";
+	protected final String unusualMessage = "Something unusual happened, please try again";
 
-    @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ExceptionResponse> handleCustomException(CustomException ex){
-        return buildDefaultExceptionResponseEntity(ex, ex.getMessage(), ex.getHttpStatus());
-    }
+	@ExceptionHandler(CustomException.class)
+	public ResponseEntity<ExceptionResponse> handleCustomException(CustomException ex) {
+		return buildDefaultExceptionResponseEntity(ex, ex.getMessage(), ex.getHttpStatus());
+	}
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponse> handleException(Exception ex){
-        return buildDefaultExceptionResponseEntity(ex, unusualMessage, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<ExceptionResponse> handleException(Exception ex) {
+		return buildDefaultExceptionResponseEntity(ex, unusualMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 
-    private ResponseEntity<ExceptionResponse> buildDefaultExceptionResponseEntity(Exception ex, String message, HttpStatus httpStatus){
-        logger.error("Controller advice caught", ex);
-        return ResponseEntity.status(httpStatus).body(new ExceptionResponse(message));
-    }
+	private ResponseEntity<ExceptionResponse> buildDefaultExceptionResponseEntity(Exception ex, String message,
+			HttpStatus httpStatus) {
+		logger.error("Controller advice caught", ex);
+		return ResponseEntity.status(httpStatus).body(new ExceptionResponse(message));
+	}
 
 }

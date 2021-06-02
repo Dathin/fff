@@ -10,12 +10,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ExtendWith(MockitoExtension.class)
 class SwaggerConfigTest {
 
-    @InjectMocks
-    SwaggerConfig swaggerConfig;
+	@InjectMocks
+	SwaggerConfig swaggerConfig;
 
-    @Test
-    void shouldReturnDocket() {
-        assertNotNull(swaggerConfig.fffApi());
-    }
+	@Test
+	void shouldReturnDocket() {
+		assertNotNull(swaggerConfig.fffApi());
+	}
 
 }

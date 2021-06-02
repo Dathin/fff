@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationListener {
 
-    private final Logger logger = LoggerFactory.getLogger(ApplicationListener.class);
+	private final Logger logger = LoggerFactory.getLogger(ApplicationListener.class);
 
-    @EventListener
-    public void onStartup(ApplicationReadyEvent event) {
-        logger.info("Swagger listening at: /swagger-ui/");
-    }
+	@EventListener
+	public void onStartup(ApplicationReadyEvent event) {
+		logger.info("Swagger listening at: /swagger-ui/");
+	}
 
 }

@@ -2,16 +2,17 @@ package me.pedrocaires.fff.exception;
 
 import org.springframework.http.HttpStatus;
 
-public abstract class CustomException extends RuntimeException{
+public abstract class CustomException extends RuntimeException {
 
-    private final HttpStatus httpStatus;
+	private final HttpStatus httpStatus;
 
-    protected CustomException(String message, HttpStatus httpStatus) {
-        super(message);
-        this.httpStatus = httpStatus;
-    }
+	protected CustomException(String message, HttpStatus httpStatus) {
+		super(message);
+		this.httpStatus = httpStatus;
+	}
 
-    public HttpStatus getHttpStatus() {
-        return httpStatus;
-    }
+	public HttpStatus getHttpStatus() {
+		return httpStatus;
+	}
+
 }

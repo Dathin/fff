@@ -7,17 +7,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class AccountService {
 
-    private final AccountRepository accountRepository;
-    private final AccountMapper accountMapper;
+	private final AccountRepository accountRepository;
 
-    public AccountService(AccountRepository accountRepository, AccountMapper accountMapper) {
-        this.accountRepository = accountRepository;
-        this.accountMapper = accountMapper;
-    }
+	private final AccountMapper accountMapper;
 
-    public CreateAccountResponse createAccount(CreateAccountRequest createAccountRequest){
-        var account = accountRepository.insert(createAccountRequest);
-        return accountMapper.accountToAccountResponse(account);
-    }
+	public AccountService(AccountRepository accountRepository, AccountMapper accountMapper) {
+		this.accountRepository = accountRepository;
+		this.accountMapper = accountMapper;
+	}
+
+	public CreateAccountResponse createAccount(CreateAccountRequest createAccountRequest) {
+		var account = accountRepository.insert(createAccountRequest);
+		return accountMapper.accountToAccountResponse(account);
+	}
 
 }

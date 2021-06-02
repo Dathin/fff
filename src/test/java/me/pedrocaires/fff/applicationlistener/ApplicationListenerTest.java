@@ -8,11 +8,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class ApplicationListenerTest {
 
-    @InjectMocks
-    ApplicationListener applicationListener;
+	@InjectMocks
+	ApplicationListener applicationListener;
 
-    @Test
-    void shouldLogAtStartup() {
-        applicationListener.onStartup(null);
-    }
+	@Test
+	void shouldLogAtStartup() {
+		applicationListener.onStartup(null);
+	}
+
 }

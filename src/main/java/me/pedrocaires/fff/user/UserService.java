@@ -19,82 +19,89 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
-    private final UserMapper userMapper;
+	private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, UserMapper userMapper) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtService = jwtService;
-        this.userMapper = userMapper;
-    }
+	private final PasswordEncoder passwordEncoder;
 
+	private final JwtService jwtService;
 
-    public CreateUserResponse createUser(CreateUserRequest createUserRequest) {
-        encryptPassword(createUserRequest);
-        try {
-            return insertNewUser(createUserRequest);
-        } catch (DuplicateKeyException ex) {
-            throw new UserAlreadyExistException();
-        } catch (DataIntegrityViolationException ex) {
-            throw new AccountDoesNotExistException();
-        }
-    }
+	private final UserMapper userMapper;
 
-    private void encryptPassword(CreateUserRequest createUserRequest) {
-        createUserRequest.setPassword(passwordEncoder.encode(createUserRequest.getPassword()));
-    }
+	public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService,
+			UserMapper userMapper) {
+		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
+		this.jwtService = jwtService;
+		this.userMapper = userMapper;
+	}
 
-    private CreateUserResponse insertNewUser(CreateUserRequest createUserRequest) {
-        var optionalAuthenticatedUser = getAuthenticatedUser();
-        if (optionalAuthenticatedUser.isPresent()) {
-            var authenticatedUser = optionalAuthenticatedUser.get();
-            return insertNewUserToAuthenticatedAccount(authenticatedUser, createUserRequest);
-        }
-        if (userRepository.countByAccountId(createUserRequest.getAccountId()) == 0) {
-            return insertFirstAccountUser(createUserRequest);
-        }
-        throw new InvalidCreateUserOnAccount();
-    }
+	public CreateUserResponse createUser(CreateUserRequest createUserRequest) {
+		encryptPassword(createUserRequest);
+		try {
+			return insertNewUser(createUserRequest);
+		}
+		catch (DuplicateKeyException ex) {
+			throw new UserAlreadyExistException();
+		}
+		catch (DataIntegrityViolationException ex) {
+			throw new AccountDoesNotExistException();
+		}
+	}
 
-    private CreateUserResponse insertNewUserToAuthenticatedAccount(User authenticatedUser, CreateUserRequest createUserRequest) {
-        createUserRequest.setAccountId(authenticatedUser.getAccountId());
-        var user = userRepository.insert(createUserRequest);
-        return userMapper.userToCreateUserResponse(user);
-    }
+	private void encryptPassword(CreateUserRequest createUserRequest) {
+		createUserRequest.setPassword(passwordEncoder.encode(createUserRequest.getPassword()));
+	}
 
-    private CreateUserResponse insertFirstAccountUser(CreateUserRequest createUserRequest) {
-        var user = userRepository.insert(createUserRequest);
-        return userMapper.userToCreateUserResponse(user);
-    }
+	private CreateUserResponse insertNewUser(CreateUserRequest createUserRequest) {
+		var optionalAuthenticatedUser = getAuthenticatedUser();
+		if (optionalAuthenticatedUser.isPresent()) {
+			var authenticatedUser = optionalAuthenticatedUser.get();
+			return insertNewUserToAuthenticatedAccount(authenticatedUser, createUserRequest);
+		}
+		if (userRepository.countByAccountId(createUserRequest.getAccountId()) == 0) {
+			return insertFirstAccountUser(createUserRequest);
+		}
+		throw new InvalidCreateUserOnAccount();
+	}
 
-    public LoginResponse login(LoginRequest loginRequest) {
-        var optionalUser = userRepository.getPasswordToLogin(loginRequest);
-        var user = optionalUser.orElseThrow(UserDoesNotExistException::new);
-        return checkPassword(user, loginRequest);
-    }
+	private CreateUserResponse insertNewUserToAuthenticatedAccount(User authenticatedUser,
+			CreateUserRequest createUserRequest) {
+		createUserRequest.setAccountId(authenticatedUser.getAccountId());
+		var user = userRepository.insert(createUserRequest);
+		return userMapper.userToCreateUserResponse(user);
+	}
 
-    private LoginResponse checkPassword(User user, LoginRequest loginRequest){
-        if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            var token = jwtService.issueToken(user);
-            return userMapper.tokenToLoginResponse(token);
-        }
-        throw new UserDoesNotExistException();
-    }
+	private CreateUserResponse insertFirstAccountUser(CreateUserRequest createUserRequest) {
+		var user = userRepository.insert(createUserRequest);
+		return userMapper.userToCreateUserResponse(user);
+	}
 
-    public Optional<UserToken> getAuthenticatedUser() {
-        var userToken = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (userToken instanceof UserToken) {
-            return Optional.of((UserToken) userToken);
-        }
-        return Optional.empty();
-    }
+	public LoginResponse login(LoginRequest loginRequest) {
+		var optionalUser = userRepository.getPasswordToLogin(loginRequest);
+		var user = optionalUser.orElseThrow(UserDoesNotExistException::new);
+		return checkPassword(user, loginRequest);
+	}
 
-    public void setAuthenticatedUser(UserToken userToken) {
-        Authentication authentication = new PreAuthenticatedAuthenticationToken(
-                userToken, null, Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
+	private LoginResponse checkPassword(User user, LoginRequest loginRequest) {
+		if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+			var token = jwtService.issueToken(user);
+			return userMapper.tokenToLoginResponse(token);
+		}
+		throw new UserDoesNotExistException();
+	}
+
+	public Optional<UserToken> getAuthenticatedUser() {
+		var userToken = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (userToken instanceof UserToken) {
+			return Optional.of((UserToken) userToken);
+		}
+		return Optional.empty();
+	}
+
+	public void setAuthenticatedUser(UserToken userToken) {
+		Authentication authentication = new PreAuthenticatedAuthenticationToken(userToken, null,
+				Collections.emptyList());
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+	}
+
 }

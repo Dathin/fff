@@ -30,154 +30,155 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-    @Mock
-    UserRepository userRepository;
+	@Mock
+	UserRepository userRepository;
 
-    @Mock
-    PasswordEncoder passwordEncoder;
+	@Mock
+	PasswordEncoder passwordEncoder;
 
-    @Mock
-    JwtService jwtService;
+	@Mock
+	JwtService jwtService;
 
-    @Mock
-    UserMapper userMapper;
+	@Mock
+	UserMapper userMapper;
 
-    @Mock
-    CreateUserRequest createUserRequest;
+	@Mock
+	CreateUserRequest createUserRequest;
 
-    @Mock
-    SecurityContext securityContext;
+	@Mock
+	SecurityContext securityContext;
 
-    @Mock
-    Authentication authentication;
+	@Mock
+	Authentication authentication;
 
-    @InjectMocks
-    UserService userService;
+	@InjectMocks
+	UserService userService;
 
-    @BeforeEach
-    void setUp() {
-        SecurityContextHolder.clearContext();
-    }
+	@BeforeEach
+	void setUp() {
+		SecurityContextHolder.clearContext();
+	}
 
-    @Test
-    void shouldInsertNewUserAtAuthenticatedUserAccount() {
-        var accountId = 1;
-        var userToken = new UserToken();
-        userToken.setAccountId(accountId);
-        userService.setAuthenticatedUser(userToken);
-        var user = new User();
-        when(userRepository.insert(createUserRequest)).thenReturn(user);
+	@Test
+	void shouldInsertNewUserAtAuthenticatedUserAccount() {
+		var accountId = 1;
+		var userToken = new UserToken();
+		userToken.setAccountId(accountId);
+		userService.setAuthenticatedUser(userToken);
+		var user = new User();
+		when(userRepository.insert(createUserRequest)).thenReturn(user);
 
-        userService.createUser(createUserRequest);
+		userService.createUser(createUserRequest);
 
-        verify(createUserRequest).setAccountId(accountId);
-        verify(userRepository).insert(createUserRequest);
-        verify(userMapper).userToCreateUserResponse(user);
-    }
+		verify(createUserRequest).setAccountId(accountId);
+		verify(userRepository).insert(createUserRequest);
+		verify(userMapper).userToCreateUserResponse(user);
+	}
 
-    @Test
-    void shouldInsertNewUserIfItIsAccountsFirstUser() {
-        mockAuthenticationWithoutUser();
-        when(userRepository.countByAccountId(createUserRequest.getAccountId())).thenReturn(0);
+	@Test
+	void shouldInsertNewUserIfItIsAccountsFirstUser() {
+		mockAuthenticationWithoutUser();
+		when(userRepository.countByAccountId(createUserRequest.getAccountId())).thenReturn(0);
 
-        userService.createUser(createUserRequest);
+		userService.createUser(createUserRequest);
 
-        verify(userRepository).insert(createUserRequest);
-    }
+		verify(userRepository).insert(createUserRequest);
+	}
 
-    @Test
-    void shouldThrowInvalidCreateUserOnAccountIfNotFirstAccountUserOrAuthenticated() {
-        mockAuthenticationWithoutUser();
-        when(userRepository.countByAccountId(createUserRequest.getAccountId())).thenReturn(1);
+	@Test
+	void shouldThrowInvalidCreateUserOnAccountIfNotFirstAccountUserOrAuthenticated() {
+		mockAuthenticationWithoutUser();
+		when(userRepository.countByAccountId(createUserRequest.getAccountId())).thenReturn(1);
 
-        assertThrows(InvalidCreateUserOnAccount.class, () -> userService.createUser(createUserRequest));
-    }
+		assertThrows(InvalidCreateUserOnAccount.class, () -> userService.createUser(createUserRequest));
+	}
 
-    @Test
-    void shouldAlwaysEncryptPassword() {
-        var encryptedPassword = "myEncryptedPassword";
-        when(passwordEncoder.encode(createUserRequest.getPassword())).thenReturn(encryptedPassword);
-        mockAuthenticationWithoutUser();
-        when(userRepository.countByAccountId(createUserRequest.getAccountId())).thenReturn(1);
+	@Test
+	void shouldAlwaysEncryptPassword() {
+		var encryptedPassword = "myEncryptedPassword";
+		when(passwordEncoder.encode(createUserRequest.getPassword())).thenReturn(encryptedPassword);
+		mockAuthenticationWithoutUser();
+		when(userRepository.countByAccountId(createUserRequest.getAccountId())).thenReturn(1);
 
-        assertThrows(InvalidCreateUserOnAccount.class, () -> userService.createUser(createUserRequest));
-        verify(createUserRequest).setPassword(encryptedPassword);
-    }
+		assertThrows(InvalidCreateUserOnAccount.class, () -> userService.createUser(createUserRequest));
+		verify(createUserRequest).setPassword(encryptedPassword);
+	}
 
-    @Test
-    void shouldThrowUserAlreadyExistsException() {
-        mockAuthenticationWithoutUser();
-        when(userRepository.insert(createUserRequest)).thenThrow(DuplicateKeyException.class);
+	@Test
+	void shouldThrowUserAlreadyExistsException() {
+		mockAuthenticationWithoutUser();
+		when(userRepository.insert(createUserRequest)).thenThrow(DuplicateKeyException.class);
 
-        assertThrows(UserAlreadyExistException.class, () -> userService.createUser(createUserRequest));
-    }
+		assertThrows(UserAlreadyExistException.class, () -> userService.createUser(createUserRequest));
+	}
 
-    @Test
-    void shouldThrowAccountDoesNotExistException() {
-        mockAuthenticationWithoutUser();
-        when(userRepository.insert(createUserRequest)).thenThrow(DataIntegrityViolationException.class);
+	@Test
+	void shouldThrowAccountDoesNotExistException() {
+		mockAuthenticationWithoutUser();
+		when(userRepository.insert(createUserRequest)).thenThrow(DataIntegrityViolationException.class);
 
-        assertThrows(AccountDoesNotExistException.class, () -> userService.createUser(createUserRequest));
-    }
+		assertThrows(AccountDoesNotExistException.class, () -> userService.createUser(createUserRequest));
+	}
 
-    @Test
-    void shouldLogin() {
-        var user = new User();
-        var optionalUser = Optional.of(user);
-        var loginRequest = new LoginRequest();
-        when(userRepository.getPasswordToLogin(loginRequest)).thenReturn(optionalUser);
-        when(passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())).thenReturn(true);
-        var token = "myToken";
-        when(jwtService.issueToken(user)).thenReturn(token);
+	@Test
+	void shouldLogin() {
+		var user = new User();
+		var optionalUser = Optional.of(user);
+		var loginRequest = new LoginRequest();
+		when(userRepository.getPasswordToLogin(loginRequest)).thenReturn(optionalUser);
+		when(passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())).thenReturn(true);
+		var token = "myToken";
+		when(jwtService.issueToken(user)).thenReturn(token);
 
-        userService.login(loginRequest);
+		userService.login(loginRequest);
 
-        verify(jwtService).issueToken(user);
-        verify(userMapper).tokenToLoginResponse(token);
-    }
+		verify(jwtService).issueToken(user);
+		verify(userMapper).tokenToLoginResponse(token);
+	}
 
-    @Test
-    void shouldThrowUserDoesNotExistExceptionWhenInvalidNameAndEmail() {
-        User user = null;
-        var optionalUser = Optional.ofNullable(user);
-        var loginRequest = new LoginRequest();
-        when(userRepository.getPasswordToLogin(loginRequest)).thenReturn(optionalUser);
+	@Test
+	void shouldThrowUserDoesNotExistExceptionWhenInvalidNameAndEmail() {
+		User user = null;
+		var optionalUser = Optional.ofNullable(user);
+		var loginRequest = new LoginRequest();
+		when(userRepository.getPasswordToLogin(loginRequest)).thenReturn(optionalUser);
 
-        assertThrows(UserDoesNotExistException.class, () -> userService.login(loginRequest));
-    }
+		assertThrows(UserDoesNotExistException.class, () -> userService.login(loginRequest));
+	}
 
-    @Test
-    void shouldThrowUserDoesNotExistExceptionWhenInvalidPassword() {
-        User user = new User();
-        var optionalUser = Optional.ofNullable(user);
-        var loginRequest = new LoginRequest();
-        when(userRepository.getPasswordToLogin(loginRequest)).thenReturn(optionalUser);
-        when(passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())).thenReturn(false);
+	@Test
+	void shouldThrowUserDoesNotExistExceptionWhenInvalidPassword() {
+		User user = new User();
+		var optionalUser = Optional.ofNullable(user);
+		var loginRequest = new LoginRequest();
+		when(userRepository.getPasswordToLogin(loginRequest)).thenReturn(optionalUser);
+		when(passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())).thenReturn(false);
 
-        assertThrows(UserDoesNotExistException.class, () -> userService.login(loginRequest));
-    }
+		assertThrows(UserDoesNotExistException.class, () -> userService.login(loginRequest));
+	}
 
-    @Test
-    void shouldGetAuthenticatedUser() {
-        var userToken = new UserToken();
-        userService.setAuthenticatedUser(userToken);
+	@Test
+	void shouldGetAuthenticatedUser() {
+		var userToken = new UserToken();
+		userService.setAuthenticatedUser(userToken);
 
-        var authenticatedUser = userService.getAuthenticatedUser();
+		var authenticatedUser = userService.getAuthenticatedUser();
 
-        assertEquals(userToken, authenticatedUser.get());
-    }
+		assertEquals(userToken, authenticatedUser.get());
+	}
 
-    @Test
-    void shouldGetEmptyWhenNoAuthenticatedUser() {
-        mockAuthenticationWithoutUser();
+	@Test
+	void shouldGetEmptyWhenNoAuthenticatedUser() {
+		mockAuthenticationWithoutUser();
 
-        var authenticatedUser = userService.getAuthenticatedUser();
+		var authenticatedUser = userService.getAuthenticatedUser();
 
-        assertTrue(authenticatedUser.isEmpty());
-    }
+		assertTrue(authenticatedUser.isEmpty());
+	}
 
-    private void mockAuthenticationWithoutUser(){
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        SecurityContextHolder.setContext(securityContext);
-    }
+	private void mockAuthenticationWithoutUser() {
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		SecurityContextHolder.setContext(securityContext);
+	}
+
 }

@@ -27,53 +27,54 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class SecurityFilterExceptionHandlerTest {
 
-    @Mock
-    ObjectMapper objectMapper;
+	@Mock
+	ObjectMapper objectMapper;
 
-    @Mock
-    HttpServletRequest httpServletRequest;
+	@Mock
+	HttpServletRequest httpServletRequest;
 
-    @Mock
-    HttpServletResponse httpServletResponse;
+	@Mock
+	HttpServletResponse httpServletResponse;
 
-    @Mock
-    AuthenticationException ex;
+	@Mock
+	AuthenticationException ex;
 
-    @Mock
-    PrintWriter printWriter;
+	@Mock
+	PrintWriter printWriter;
 
-    @InjectMocks
-    SecurityFilterExceptionHandler securityFilterExceptionHandler;
+	@InjectMocks
+	SecurityFilterExceptionHandler securityFilterExceptionHandler;
 
-    @BeforeEach
-    void setUp() throws IOException {
-        when(httpServletResponse.getWriter()).thenReturn(printWriter);
-    }
+	@BeforeEach
+	void setUp() throws IOException {
+		when(httpServletResponse.getWriter()).thenReturn(printWriter);
+	}
 
-    @Test
-    void shouldSetResponseHeaders() throws ServletException, IOException {
-        securityFilterExceptionHandler.commence(httpServletRequest, httpServletResponse, ex);
+	@Test
+	void shouldSetResponseHeaders() throws ServletException, IOException {
+		securityFilterExceptionHandler.commence(httpServletRequest, httpServletResponse, ex);
 
-        verify(httpServletResponse).setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-    }
+		verify(httpServletResponse).setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
+	}
 
-    @Test
-    void shouldSetUnauthorizedStatus() throws ServletException, IOException {
-        securityFilterExceptionHandler.commence(httpServletRequest, httpServletResponse, ex);
+	@Test
+	void shouldSetUnauthorizedStatus() throws ServletException, IOException {
+		securityFilterExceptionHandler.commence(httpServletRequest, httpServletResponse, ex);
 
-        verify(httpServletResponse).setStatus(HttpStatus.UNAUTHORIZED.value());
-    }
+		verify(httpServletResponse).setStatus(HttpStatus.UNAUTHORIZED.value());
+	}
 
-    @Test
-    void shouldWriteResponseBody() throws ServletException, IOException {
-        var bodyString = "MyResponseBody";
-        when(objectMapper.writeValueAsString(any())).thenReturn(bodyString);
+	@Test
+	void shouldWriteResponseBody() throws ServletException, IOException {
+		var bodyString = "MyResponseBody";
+		when(objectMapper.writeValueAsString(any())).thenReturn(bodyString);
 
-        securityFilterExceptionHandler.commence(httpServletRequest, httpServletResponse, ex);
+		securityFilterExceptionHandler.commence(httpServletRequest, httpServletResponse, ex);
 
-        verify(ex).getMessage();
-        verify(printWriter).write(bodyString);
-        verify(printWriter).close();
-        verify(printWriter).flush();
-    }
+		verify(ex).getMessage();
+		verify(printWriter).write(bodyString);
+		verify(printWriter).close();
+		verify(printWriter).flush();
+	}
+
 }

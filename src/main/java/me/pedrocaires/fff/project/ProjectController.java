@@ -12,20 +12,20 @@ import java.util.List;
 @RequestMapping("/project")
 public class ProjectController {
 
-    private final ProjectService projectService;
+	private final ProjectService projectService;
 
-    public ProjectController(ProjectService projectService) {
-        this.projectService = projectService;
-    }
+	public ProjectController(ProjectService projectService) {
+		this.projectService = projectService;
+	}
 
-    @GetMapping
-    public ResponseEntity<List<ProjectResponse>> getProjects(){
-        return ResponseEntity.ok(projectService.getProjectsFromAccountId());
-    }
+	@GetMapping
+	public ResponseEntity<List<ProjectResponse>> getProjects() {
+		return ResponseEntity.ok(projectService.getProjectsFromAccountId());
+	}
 
-    @PostMapping
-    public ResponseEntity<CreateProjectResponse> createProject(@RequestBody CreateProjectRequest createProjectRequest){
-        return ResponseEntity.ok(projectService.createProjectForAccountId(createProjectRequest));
-    }
+	@PostMapping
+	public ResponseEntity<CreateProjectResponse> createProject(@RequestBody CreateProjectRequest createProjectRequest) {
+		return ResponseEntity.ok(projectService.createProjectForAccountId(createProjectRequest));
+	}
 
 }

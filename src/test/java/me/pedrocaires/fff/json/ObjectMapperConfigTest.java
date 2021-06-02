@@ -13,37 +13,39 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(MockitoExtension.class)
 class ObjectMapperConfigTest {
 
-    @InjectMocks
-    ObjectMapperConfig objectMapperConfig;
+	@InjectMocks
+	ObjectMapperConfig objectMapperConfig;
 
-    ObjectMapper objectMapper;
+	ObjectMapper objectMapper;
 
-    @BeforeEach
-    void setUp() {
-        objectMapper = objectMapperConfig.objectMapper();
-    }
+	@BeforeEach
+	void setUp() {
+		objectMapper = objectMapperConfig.objectMapper();
+	}
 
-    @Test
-    void shouldProvideObjectMapperThatDoesntFailOnUnknownPropertiesRead() throws JsonProcessingException {
-        var nameProperty = "test";
-        var stringWithUnknownProperties = "{\"name\": \"" + nameProperty + "\", \"unknownProperty\": \"I'm unknown\", \"unknownProperty2\": \"I'm unknown too\"}";
+	@Test
+	void shouldProvideObjectMapperThatDoesntFailOnUnknownPropertiesRead() throws JsonProcessingException {
+		var nameProperty = "test";
+		var stringWithUnknownProperties = "{\"name\": \"" + nameProperty
+				+ "\", \"unknownProperty\": \"I'm unknown\", \"unknownProperty2\": \"I'm unknown too\"}";
 
-        var rodeClass = objectMapper.readValue(stringWithUnknownProperties, ClassWithProperties.class);
+		var rodeClass = objectMapper.readValue(stringWithUnknownProperties, ClassWithProperties.class);
 
-        assertEquals(nameProperty, rodeClass.getName());
-    }
+		assertEquals(nameProperty, rodeClass.getName());
+	}
 
+	static class ClassWithProperties {
 
-    static class ClassWithProperties {
-        private String name;
+		private String name;
 
-        public String getName() {
-            return name;
-        }
+		public String getName() {
+			return name;
+		}
 
-        public void setName(String name) {
-            this.name = name;
-        }
-    }
+		public void setName(String name) {
+			this.name = name;
+		}
+
+	}
 
 }

@@ -17,18 +17,20 @@ import java.io.IOException;
 @Component
 public class SecurityFilterExceptionHandler implements AuthenticationEntryPoint {
 
-    private final ObjectMapper objectMapper;
+	private final ObjectMapper objectMapper;
 
-    public SecurityFilterExceptionHandler(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
+	public SecurityFilterExceptionHandler(ObjectMapper objectMapper) {
+		this.objectMapper = objectMapper;
+	}
 
-    @Override
-    public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException ex) throws IOException, ServletException {
-        httpServletResponse.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-        httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
-        httpServletResponse.getWriter().write(objectMapper.writeValueAsString(new ExceptionResponse(ex.getMessage())));
-        httpServletResponse.getWriter().flush();
-        httpServletResponse.getWriter().close();
-    }
+	@Override
+	public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+			AuthenticationException ex) throws IOException, ServletException {
+		httpServletResponse.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
+		httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
+		httpServletResponse.getWriter().write(objectMapper.writeValueAsString(new ExceptionResponse(ex.getMessage())));
+		httpServletResponse.getWriter().flush();
+		httpServletResponse.getWriter().close();
+	}
+
 }

@@ -7,5 +7,6 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface AccountMapper {
 
-    CreateAccountResponse accountToAccountResponse(Account account);
+	CreateAccountResponse accountToAccountResponse(Account account);
+
 }

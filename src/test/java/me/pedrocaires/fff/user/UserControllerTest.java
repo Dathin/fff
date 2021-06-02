@@ -20,36 +20,36 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
 
-    @Mock
-    UserService userService;
+	@Mock
+	UserService userService;
 
-    @InjectMocks
-    UserController userController;
+	@InjectMocks
+	UserController userController;
 
-    @Test
-    void shouldCreateAccount() {
-        var createUserRequest = new CreateUserRequest();
-        var createUserResponse = new CreateUserResponse();
-        when(userService.createUser(createUserRequest)).thenReturn(createUserResponse);
+	@Test
+	void shouldCreateAccount() {
+		var createUserRequest = new CreateUserRequest();
+		var createUserResponse = new CreateUserResponse();
+		when(userService.createUser(createUserRequest)).thenReturn(createUserResponse);
 
-        var createdUserResponseEntity = userController.createUser(createUserRequest);
+		var createdUserResponseEntity = userController.createUser(createUserRequest);
 
-        verify(userService).createUser(createUserRequest);
-        assertEquals(HttpStatus.OK, createdUserResponseEntity.getStatusCode());
-        assertEquals(createUserResponse, createdUserResponseEntity.getBody());
-    }
+		verify(userService).createUser(createUserRequest);
+		assertEquals(HttpStatus.OK, createdUserResponseEntity.getStatusCode());
+		assertEquals(createUserResponse, createdUserResponseEntity.getBody());
+	}
 
-    @Test
-    void shouldLogin() {
-        var loginRequest = new LoginRequest();
-        var loginResponse = new LoginResponse();
-        when(userService.login(loginRequest)).thenReturn(loginResponse);
+	@Test
+	void shouldLogin() {
+		var loginRequest = new LoginRequest();
+		var loginResponse = new LoginResponse();
+		when(userService.login(loginRequest)).thenReturn(loginResponse);
 
-        var createdUserResponseEntity = userController.login(loginRequest);
+		var createdUserResponseEntity = userController.login(loginRequest);
 
-        verify(userService).login(loginRequest);
-        assertEquals(HttpStatus.OK, createdUserResponseEntity.getStatusCode());
-        assertEquals(loginResponse, createdUserResponseEntity.getBody());
-    }
+		verify(userService).login(loginRequest);
+		assertEquals(HttpStatus.OK, createdUserResponseEntity.getStatusCode());
+		assertEquals(loginResponse, createdUserResponseEntity.getBody());
+	}
 
 }

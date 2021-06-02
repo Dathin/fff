@@ -15,39 +15,40 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(MockitoExtension.class)
 class JwtServiceTest {
 
-    JwtService jwtService;
+	JwtService jwtService;
 
-    @BeforeEach
-    void setUp() {
-        jwtService = new JwtService("testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest");
-    }
+	@BeforeEach
+	void setUp() {
+		jwtService = new JwtService(
+				"testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest");
+	}
 
-    @Test
-    void shouldExpireTokenInTenMinutes() {
-        long tenMinutesInMs = 600000;
-        var user = new User();
-        var token = jwtService.issueToken(user);
+	@Test
+	void shouldExpireTokenInTenMinutes() {
+		long tenMinutesInMs = 600000;
+		var user = new User();
+		var token = jwtService.issueToken(user);
 
-        var userToken = jwtService.validateToken(token);
-        var timeBetweenNowAndTokenExpiration = userToken.getExpiresAt().getTime() - new Date().getTime();
+		var userToken = jwtService.validateToken(token);
+		var timeBetweenNowAndTokenExpiration = userToken.getExpiresAt().getTime() - new Date().getTime();
 
-        assertEquals(tenMinutesInMs, timeBetweenNowAndTokenExpiration, 10000);
-    }
+		assertEquals(tenMinutesInMs, timeBetweenNowAndTokenExpiration, 10000);
+	}
 
+	@Test
+	void shouldThrowWhenInvalidToken() {
+		assertThrows(UnauthorizedException.class, () -> jwtService.validateToken("invalid token"));
+	}
 
-    @Test
-    void shouldThrowWhenInvalidToken() {
-        assertThrows(UnauthorizedException.class, () -> jwtService.validateToken("invalid token"));
-    }
+	@Test
+	void shouldIssueValidToken() {
+		var user = new User();
+		user.setId(1);
+		var token = jwtService.issueToken(user);
 
-    @Test
-    void shouldIssueValidToken() {
-        var user = new User();
-        user.setId(1);
-        var token = jwtService.issueToken(user);
+		var userToken = jwtService.validateToken(token);
 
-        var userToken = jwtService.validateToken(token);
+		assertEquals(user.getId(), userToken.getId());
+	}
 
-        assertEquals(user.getId(), userToken.getId());
-    }
 }

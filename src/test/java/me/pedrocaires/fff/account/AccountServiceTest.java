@@ -11,28 +11,28 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-
 @ExtendWith(MockitoExtension.class)
 class AccountServiceTest {
 
-    @Mock
-    AccountRepository accountRepository;
+	@Mock
+	AccountRepository accountRepository;
 
-    @Mock
-    AccountMapper accountMapper;
+	@Mock
+	AccountMapper accountMapper;
 
-    @InjectMocks
-    AccountService accountService;
+	@InjectMocks
+	AccountService accountService;
 
-    @Test
-    void shouldInsertAndMapResponse() {
-        var createAccountRequest = new CreateAccountRequest();
-        var account = new Account();
-        when(accountRepository.insert(createAccountRequest)).thenReturn(account);
+	@Test
+	void shouldInsertAndMapResponse() {
+		var createAccountRequest = new CreateAccountRequest();
+		var account = new Account();
+		when(accountRepository.insert(createAccountRequest)).thenReturn(account);
 
-        accountService.createAccount(createAccountRequest);
+		accountService.createAccount(createAccountRequest);
 
-        verify(accountRepository).insert(createAccountRequest);
-        verify(accountMapper).accountToAccountResponse(account);
-    }
+		verify(accountRepository).insert(createAccountRequest);
+		verify(accountMapper).accountToAccountResponse(account);
+	}
+
 }

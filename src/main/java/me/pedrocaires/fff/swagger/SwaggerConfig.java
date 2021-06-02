@@ -18,48 +18,41 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.Collections;
 import java.util.List;
 
-
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
-    @Bean
-    public Docket fffApi() {
 
-        return new Docket(DocumentationType.OAS_30)
-                .useDefaultResponseMessages(false)
-                .select()
-                .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
-                .paths(PathSelectors.any())
-                .build()
-                .apiInfo(metaData())
-                .securitySchemes(Collections.singletonList(apiKey()))
-                .securityContexts(Collections.singletonList(securityContext()));
+	@Bean
+	public Docket fffApi() {
 
-    }
+		return new Docket(DocumentationType.OAS_30).useDefaultResponseMessages(false).select()
+				.apis(RequestHandlerSelectors.withClassAnnotation(RestController.class)).paths(PathSelectors.any())
+				.build().apiInfo(metaData()).securitySchemes(Collections.singletonList(apiKey()))
+				.securityContexts(Collections.singletonList(securityContext()));
 
-    private ApiKey apiKey(){
-        return new ApiKey("Authorization", "Authorization", "header");
-    }
+	}
 
-    private SecurityContext securityContext(){
-        return SecurityContext.builder().securityReferences(defaultAuth()).operationSelector(operationContext -> true).build();
-    }
+	private ApiKey apiKey() {
+		return new ApiKey("Authorization", "Authorization", "header");
+	}
 
-    private List<SecurityReference> defaultAuth(){
-        var authorizationScope = new AuthorizationScope("global", "Identify you and your account to access restrict content");
-        var authorizationScopes = new AuthorizationScope[1];
-        authorizationScopes[0] = authorizationScope;
-        return Collections.singletonList(new SecurityReference("Authorization",
-                authorizationScopes));
-    }
+	private SecurityContext securityContext() {
+		return SecurityContext.builder().securityReferences(defaultAuth()).operationSelector(operationContext -> true)
+				.build();
+	}
 
-    private ApiInfo metaData() {
-        return new ApiInfoBuilder()
-                .title("Free Feature Flag API")
-                .description("This is the first version of FFF api")
-                .version("1.0.0")
-                .license("Apache License Version 2.0")
-                .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0.html")
-                .build();
-    }
+	private List<SecurityReference> defaultAuth() {
+		var authorizationScope = new AuthorizationScope("global",
+				"Identify you and your account to access restrict content");
+		var authorizationScopes = new AuthorizationScope[1];
+		authorizationScopes[0] = authorizationScope;
+		return Collections.singletonList(new SecurityReference("Authorization", authorizationScopes));
+	}
+
+	private ApiInfo metaData() {
+		return new ApiInfoBuilder().title("Free Feature Flag API").description("This is the first version of FFF api")
+				.version("1.0.0").license("Apache License Version 2.0")
+				.licenseUrl("https://www.apache.org/licenses/LICENSE-2.0.html").build();
+	}
+
 }

@@ -4,13 +4,14 @@ import java.util.Date;
 
 public class UserToken extends User {
 
-    private Date expiresAt;
+	private Date expiresAt;
 
-    public Date getExpiresAt() {
-        return expiresAt;
-    }
+	public Date getExpiresAt() {
+		return expiresAt;
+	}
 
-    public void setExpiresAt(Date expiresAt) {
-        this.expiresAt = expiresAt;
-    }
+	public void setExpiresAt(Date expiresAt) {
+		this.expiresAt = expiresAt;
+	}
+
 }

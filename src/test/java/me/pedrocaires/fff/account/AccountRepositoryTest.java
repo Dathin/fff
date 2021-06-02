@@ -17,19 +17,20 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class AccountRepositoryTest {
 
-    @Mock
-    JdbcTemplate jdbcTemplate;
+	@Mock
+	JdbcTemplate jdbcTemplate;
 
-    @InjectMocks
-    AccountRepository accountRepository;
+	@InjectMocks
+	AccountRepository accountRepository;
 
-    @Test
-    void shouldPassAccountInfoToInsert() {
-        var createAccountRequest = new CreateAccountRequest();
-        createAccountRequest.setName("test-name");
+	@Test
+	void shouldPassAccountInfoToInsert() {
+		var createAccountRequest = new CreateAccountRequest();
+		createAccountRequest.setName("test-name");
 
-        var account =  accountRepository.insert(createAccountRequest);
+		var account = accountRepository.insert(createAccountRequest);
 
-        verify(jdbcTemplate).query(any(), any(ResultSetExtractor.class), eq(createAccountRequest.getName()));
-    }
+		verify(jdbcTemplate).query(any(), any(ResultSetExtractor.class), eq(createAccountRequest.getName()));
+	}
+
 }

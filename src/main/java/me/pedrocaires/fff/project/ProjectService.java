@@ -12,28 +12,28 @@ import java.util.List;
 @Service
 public class ProjectService {
 
-    private final ProjectRepository projectRepository;
+	private final ProjectRepository projectRepository;
 
-    private final ProjectMapper projectMapper;
+	private final ProjectMapper projectMapper;
 
-    private final UserService userService;
+	private final UserService userService;
 
-    public ProjectService(ProjectRepository projectRepository, ProjectMapper projectMapper, UserService userService) {
-        this.projectRepository = projectRepository;
-        this.projectMapper = projectMapper;
-        this.userService = userService;
-    }
+	public ProjectService(ProjectRepository projectRepository, ProjectMapper projectMapper, UserService userService) {
+		this.projectRepository = projectRepository;
+		this.projectMapper = projectMapper;
+		this.userService = userService;
+	}
 
-    public List<ProjectResponse> getProjectsFromAccountId() {
-        var accountId = userService.getAuthenticatedUser().orElseThrow(UnauthorizedException::new).getAccountId();
-        var projects = projectRepository.getProjectsByAccountId(accountId);
-        return projectMapper.projectsToProjectsResponse(projects);
-    }
+	public List<ProjectResponse> getProjectsFromAccountId() {
+		var accountId = userService.getAuthenticatedUser().orElseThrow(UnauthorizedException::new).getAccountId();
+		var projects = projectRepository.getProjectsByAccountId(accountId);
+		return projectMapper.projectsToProjectsResponse(projects);
+	}
 
+	public CreateProjectResponse createProjectForAccountId(CreateProjectRequest createProjectRequest) {
+		var accountId = userService.getAuthenticatedUser().orElseThrow(UnauthorizedException::new).getAccountId();
+		var project = projectRepository.insert(createProjectRequest, accountId);
+		return projectMapper.projectToCreateProjectResponse(project);
+	}
 
-    public CreateProjectResponse createProjectForAccountId(CreateProjectRequest createProjectRequest) {
-        var accountId = userService.getAuthenticatedUser().orElseThrow(UnauthorizedException::new).getAccountId();
-        var project = projectRepository.insert(createProjectRequest, accountId);
-        return projectMapper.projectToCreateProjectResponse(project);
-    }
 }

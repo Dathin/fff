@@ -12,18 +12,19 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ExtendWith(MockitoExtension.class)
 class PasswordCryptoConfigTest {
 
-    @InjectMocks
-    PasswordCryptoConfig passwordCryptoConfig;
+	@InjectMocks
+	PasswordCryptoConfig passwordCryptoConfig;
 
-    PasswordEncoder passwordEncoder;
+	PasswordEncoder passwordEncoder;
 
-    @BeforeEach
-    void setUp() {
-        passwordEncoder = passwordCryptoConfig.encoder();
-    }
+	@BeforeEach
+	void setUp() {
+		passwordEncoder = passwordCryptoConfig.encoder();
+	}
 
-    @Test
-    void shouldReturnPasswordEncoder() {
-        assertNotNull(passwordEncoder);
-    }
+	@Test
+	void shouldReturnPasswordEncoder() {
+		assertNotNull(passwordEncoder);
+	}
+
 }

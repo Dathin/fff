@@ -14,19 +14,20 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ExtendWith(MockitoExtension.class)
 class PostgresConfigTest {
 
-    @Mock
-    DataSource dataSource;
+	@Mock
+	DataSource dataSource;
 
-    @InjectMocks
-    PostgresConfig postgresConfig;
+	@InjectMocks
+	PostgresConfig postgresConfig;
 
-    @Test
-    void shouldReturnDataSource() {
-        assertNotNull(postgresConfig.postgresDataSource());
-    }
+	@Test
+	void shouldReturnDataSource() {
+		assertNotNull(postgresConfig.postgresDataSource());
+	}
 
-    @Test
-    void shouldReturnJdbcTemplate() {
-        assertNotNull(postgresConfig.postgresJdbcTemplate(dataSource));
-    }
+	@Test
+	void shouldReturnJdbcTemplate() {
+		assertNotNull(postgresConfig.postgresJdbcTemplate(dataSource));
+	}
+
 }

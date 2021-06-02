@@ -21,61 +21,62 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ProjectServiceTest {
 
-    @Mock
-    ProjectRepository projectRepository;
+	@Mock
+	ProjectRepository projectRepository;
 
-    @Mock
-    ProjectMapper projectMapper;
+	@Mock
+	ProjectMapper projectMapper;
 
-    @Mock
-    UserService userService;
+	@Mock
+	UserService userService;
 
-    @InjectMocks
-    ProjectService projectService;
+	@InjectMocks
+	ProjectService projectService;
 
-    @Test
-    void shouldCreateProjectForAccountId() {
-        var accountId = 1;
-        var userToken = new UserToken();
-        userToken.setAccountId(accountId);
-        var createProjectRequest = new CreateProjectRequest();
-        var project = new Project();
-        when(userService.getAuthenticatedUser()).thenReturn(Optional.of(userToken));
-        when(projectRepository.insert(createProjectRequest, accountId)).thenReturn(project);
+	@Test
+	void shouldCreateProjectForAccountId() {
+		var accountId = 1;
+		var userToken = new UserToken();
+		userToken.setAccountId(accountId);
+		var createProjectRequest = new CreateProjectRequest();
+		var project = new Project();
+		when(userService.getAuthenticatedUser()).thenReturn(Optional.of(userToken));
+		when(projectRepository.insert(createProjectRequest, accountId)).thenReturn(project);
 
-        projectService.createProjectForAccountId(createProjectRequest);
+		projectService.createProjectForAccountId(createProjectRequest);
 
-        verify(projectRepository).insert(createProjectRequest, accountId);
-        verify(projectMapper).projectToCreateProjectResponse(project);
-    }
+		verify(projectRepository).insert(createProjectRequest, accountId);
+		verify(projectMapper).projectToCreateProjectResponse(project);
+	}
 
-    @Test
-    void shouldThrowWhenCreateProjectWithInvalidAuthentication() {
-        var createProjectRequest = new CreateProjectRequest();
-        when(userService.getAuthenticatedUser()).thenReturn(Optional.empty());
+	@Test
+	void shouldThrowWhenCreateProjectWithInvalidAuthentication() {
+		var createProjectRequest = new CreateProjectRequest();
+		when(userService.getAuthenticatedUser()).thenReturn(Optional.empty());
 
-        assertThrows(UnauthorizedException.class, () -> projectService.createProjectForAccountId(createProjectRequest));
-    }
+		assertThrows(UnauthorizedException.class, () -> projectService.createProjectForAccountId(createProjectRequest));
+	}
 
-    @Test
-    void shouldGetProjectsForAccountId() {
-        var accountId = 1;
-        var userToken = new UserToken();
-        userToken.setAccountId(accountId);
-        var projects = new ArrayList<Project>();
-        when(userService.getAuthenticatedUser()).thenReturn(Optional.of(userToken));
-        when(projectRepository.getProjectsByAccountId(accountId)).thenReturn(projects);
+	@Test
+	void shouldGetProjectsForAccountId() {
+		var accountId = 1;
+		var userToken = new UserToken();
+		userToken.setAccountId(accountId);
+		var projects = new ArrayList<Project>();
+		when(userService.getAuthenticatedUser()).thenReturn(Optional.of(userToken));
+		when(projectRepository.getProjectsByAccountId(accountId)).thenReturn(projects);
 
-        projectService.getProjectsFromAccountId();
+		projectService.getProjectsFromAccountId();
 
-        verify(projectRepository).getProjectsByAccountId(accountId);
-        verify(projectMapper).projectsToProjectsResponse(projects);
-    }
+		verify(projectRepository).getProjectsByAccountId(accountId);
+		verify(projectMapper).projectsToProjectsResponse(projects);
+	}
 
-    @Test
-    void shouldThrowWhenGetProjectsWithInvalidAuthentication() {
-        when(userService.getAuthenticatedUser()).thenReturn(Optional.empty());
+	@Test
+	void shouldThrowWhenGetProjectsWithInvalidAuthentication() {
+		when(userService.getAuthenticatedUser()).thenReturn(Optional.empty());
 
-        assertThrows(UnauthorizedException.class, () -> projectService.getProjectsFromAccountId());
-    }
+		assertThrows(UnauthorizedException.class, () -> projectService.getProjectsFromAccountId());
+	}
+
 }

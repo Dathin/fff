@@ -26,64 +26,63 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class SecurityFilterTest {
 
-    @Mock
-    JwtService jwtService;
+	@Mock
+	JwtService jwtService;
 
-    @Mock
-    SecurityFilterExceptionHandler securityFilterExceptionHandler;
+	@Mock
+	SecurityFilterExceptionHandler securityFilterExceptionHandler;
 
-    @Mock
-    UserService userService;
+	@Mock
+	UserService userService;
 
-    @Mock
-    HttpServletRequest httpServletRequest;
+	@Mock
+	HttpServletRequest httpServletRequest;
 
-    @Mock
-    HttpServletResponse httpServletResponse;
+	@Mock
+	HttpServletResponse httpServletResponse;
 
-    @Mock
-    FilterChain filterChain;
+	@Mock
+	FilterChain filterChain;
 
-    @InjectMocks
-    SecurityFilter securityFilter;
+	@InjectMocks
+	SecurityFilter securityFilter;
 
+	@Test
+	void shouldJustDoFilterOnNullToken() throws ServletException, IOException {
+		when(httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(null);
 
+		securityFilter.doFilterInternal(httpServletRequest, httpServletResponse, filterChain);
 
-    @Test
-    void shouldJustDoFilterOnNullToken() throws ServletException, IOException {
-        when(httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(null);
+		verify(filterChain).doFilter(httpServletRequest, httpServletResponse);
+		verify(userService, never()).setAuthenticatedUser(any());
+		verify(securityFilterExceptionHandler, never()).commence(any(), any(), any());
+	}
 
-        securityFilter.doFilterInternal(httpServletRequest, httpServletResponse, filterChain);
+	@Test
+	void shouldSetUserFromToken() throws ServletException, IOException {
+		var token = "notNullToken";
+		var userToken = new UserToken();
+		when(httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(token);
+		when(jwtService.validateToken(token)).thenReturn(userToken);
 
-        verify(filterChain).doFilter(httpServletRequest, httpServletResponse);
-        verify(userService, never()).setAuthenticatedUser(any());
-        verify(securityFilterExceptionHandler, never()).commence(any(), any(), any());
-    }
+		securityFilter.doFilterInternal(httpServletRequest, httpServletResponse, filterChain);
 
-    @Test
-    void shouldSetUserFromToken() throws ServletException, IOException {
-        var token = "notNullToken";
-        var userToken = new UserToken();
-        when(httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(token);
-        when(jwtService.validateToken(token)).thenReturn(userToken);
+		verify(filterChain).doFilter(httpServletRequest, httpServletResponse);
+		verify(userService).setAuthenticatedUser(userToken);
+		verify(securityFilterExceptionHandler, never()).commence(any(), any(), any());
+	}
 
-        securityFilter.doFilterInternal(httpServletRequest, httpServletResponse, filterChain);
+	@Test
+	void shouldCommenceOnTokenError() throws ServletException, IOException {
+		var token = "tokenWithErrors";
+		when(httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(token);
+		when(jwtService.validateToken(token)).thenThrow(UnauthorizedException.class);
 
-        verify(filterChain).doFilter(httpServletRequest, httpServletResponse);
-        verify(userService).setAuthenticatedUser(userToken);
-        verify(securityFilterExceptionHandler, never()).commence(any(), any(), any());
-    }
+		securityFilter.doFilterInternal(httpServletRequest, httpServletResponse, filterChain);
 
-    @Test
-    void shouldCommenceOnTokenError() throws ServletException, IOException {
-        var token = "tokenWithErrors";
-        when(httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(token);
-        when(jwtService.validateToken(token)).thenThrow(UnauthorizedException.class);
+		verify(filterChain, never()).doFilter(httpServletRequest, httpServletResponse);
+		verify(userService, never()).setAuthenticatedUser(any());
+		verify(securityFilterExceptionHandler).commence(any(), any(), any());
+	}
 
-        securityFilter.doFilterInternal(httpServletRequest, httpServletResponse, filterChain);
-
-        verify(filterChain, never()).doFilter(httpServletRequest, httpServletResponse);
-        verify(userService, never()).setAuthenticatedUser(any());
-        verify(securityFilterExceptionHandler).commence(any(), any(), any());
-    }
 }

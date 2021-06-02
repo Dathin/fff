@@ -1,33 +1,35 @@
 package me.pedrocaires.fff.user.model;
 
 public class LoginRequest {
-    private int accountId;
 
-    private String name;
+	private int accountId;
 
-    private String password;
+	private String name;
 
-    public int getAccountId() {
-        return accountId;
-    }
+	private String password;
 
-    public void setAccountId(int accountId) {
-        this.accountId = accountId;
-    }
+	public int getAccountId() {
+		return accountId;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setAccountId(int accountId) {
+		this.accountId = accountId;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 }

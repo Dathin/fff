@@ -15,46 +15,52 @@ import java.util.Optional;
 @Repository
 public class UserRepository {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final ReturningCountCallbackHandler returningCountCallbackHandler;
+	private final JdbcTemplate jdbcTemplate;
 
-    private final ResultSetExtractor<Optional<User>> optionalUserResultSetExtractor = resultSet -> {
-        if (resultSet.next()){
-            var user = resultSetUser(resultSet);
-            return Optional.of(user);
-        }
-        return Optional.empty();
-    };
+	private final ReturningCountCallbackHandler returningCountCallbackHandler;
 
-    private final ResultSetExtractor<User> userResultSetExtractor = resultSet -> {
-        resultSet.next();
-        return resultSetUser(resultSet);
-    };
+	private final ResultSetExtractor<Optional<User>> optionalUserResultSetExtractor = resultSet -> {
+		if (resultSet.next()) {
+			var user = resultSetUser(resultSet);
+			return Optional.of(user);
+		}
+		return Optional.empty();
+	};
 
-    public UserRepository(JdbcTemplate jdbcTemplate, ReturningCountCallbackHandler returningCountCallbackHandler) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.returningCountCallbackHandler = returningCountCallbackHandler;
-    }
+	private final ResultSetExtractor<User> userResultSetExtractor = resultSet -> {
+		resultSet.next();
+		return resultSetUser(resultSet);
+	};
 
-    public User insert(CreateUserRequest createUserRequest){
-        return jdbcTemplate.query("INSERT INTO USERS (NAME, ACCOUNT_ID, PASSWORD) VALUES (?, ?, ?) RETURNING ID, NAME, ACCOUNT_ID, PASSWORD",
-                userResultSetExtractor, createUserRequest.getName(), createUserRequest.getAccountId(), createUserRequest.getPassword());
-    }
+	public UserRepository(JdbcTemplate jdbcTemplate, ReturningCountCallbackHandler returningCountCallbackHandler) {
+		this.jdbcTemplate = jdbcTemplate;
+		this.returningCountCallbackHandler = returningCountCallbackHandler;
+	}
 
-    public Optional<User> getPasswordToLogin(LoginRequest loginRequest){
-        return jdbcTemplate.query("SELECT * FROM USERS WHERE ACCOUNT_ID = ? AND NAME = ? LIMIT 1", optionalUserResultSetExtractor, loginRequest.getAccountId(), loginRequest.getName());
-    }
+	public User insert(CreateUserRequest createUserRequest) {
+		return jdbcTemplate.query(
+				"INSERT INTO USERS (NAME, ACCOUNT_ID, PASSWORD) VALUES (?, ?, ?) RETURNING ID, NAME, ACCOUNT_ID, PASSWORD",
+				userResultSetExtractor, createUserRequest.getName(), createUserRequest.getAccountId(),
+				createUserRequest.getPassword());
+	}
 
-    public int countByAccountId(int accountId){
-        return jdbcTemplate.query("SELECT COUNT(1) FROM USERS WHERE ACCOUNT_ID = ?", returningCountCallbackHandler, accountId);
-    }
+	public Optional<User> getPasswordToLogin(LoginRequest loginRequest) {
+		return jdbcTemplate.query("SELECT * FROM USERS WHERE ACCOUNT_ID = ? AND NAME = ? LIMIT 1",
+				optionalUserResultSetExtractor, loginRequest.getAccountId(), loginRequest.getName());
+	}
 
-    private User resultSetUser(ResultSet resultSet) throws SQLException {
-        var user = new User();
-        user.setId(resultSet.getInt("ID"));
-        user.setAccountId(resultSet.getInt("ACCOUNT_ID"));
-        user.setName(resultSet.getString("NAME"));
-        user.setPassword(resultSet.getString("PASSWORD"));
-        return user;
-    }
+	public int countByAccountId(int accountId) {
+		return jdbcTemplate.query("SELECT COUNT(1) FROM USERS WHERE ACCOUNT_ID = ?", returningCountCallbackHandler,
+				accountId);
+	}
+
+	private User resultSetUser(ResultSet resultSet) throws SQLException {
+		var user = new User();
+		user.setId(resultSet.getInt("ID"));
+		user.setAccountId(resultSet.getInt("ACCOUNT_ID"));
+		user.setName(resultSet.getString("NAME"));
+		user.setPassword(resultSet.getString("PASSWORD"));
+		return user;
+	}
+
 }

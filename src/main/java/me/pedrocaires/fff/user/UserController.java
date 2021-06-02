@@ -14,20 +14,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user")
 public class UserController {
 
-    private final UserService userService;
+	private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+	public UserController(UserService userService) {
+		this.userService = userService;
+	}
 
-    @PostMapping
-    public ResponseEntity<CreateUserResponse> createUser(@RequestBody CreateUserRequest createUserRequest){
-        return ResponseEntity.ok(userService.createUser(createUserRequest));
-    }
+	@PostMapping
+	public ResponseEntity<CreateUserResponse> createUser(@RequestBody CreateUserRequest createUserRequest) {
+		return ResponseEntity.ok(userService.createUser(createUserRequest));
+	}
 
-    @PostMapping("login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
-        return ResponseEntity.ok(userService.login(loginRequest));
-    }
+	@PostMapping("login")
+	public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+		return ResponseEntity.ok(userService.login(loginRequest));
+	}
 
 }
