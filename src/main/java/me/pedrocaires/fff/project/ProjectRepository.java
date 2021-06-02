@@ -31,7 +31,6 @@ public class ProjectRepository {
 
     public Project insert(CreateProjectRequest createProjectRequest, int accountId){
         return jdbcTemplate.query("INSERT INTO PROJECTS (NAME, ACCOUNT_ID) VALUES (?, ?) RETURNING ID, NAME, ACCOUNT_ID", resultSet -> {
-            var project = new Project();
             resultSet.next();
             return resultSetProject(resultSet);
         }, createProjectRequest.getName(), accountId);
