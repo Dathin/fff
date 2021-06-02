@@ -6,6 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.co.jemos.podam.api.PodamFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 import java.util.Date;
 
@@ -14,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class JwtServiceTest {
+
+	PodamFactory podamFactory = new PodamFactoryImpl();
 
 	JwtService jwtService;
 
@@ -26,7 +30,8 @@ class JwtServiceTest {
 	@Test
 	void shouldExpireTokenInTenMinutes() {
 		long tenMinutesInMs = 600000;
-		var user = new User();
+		var user = podamFactory.manufacturePojo(User.class);
+		;
 		var token = jwtService.issueToken(user);
 
 		var userToken = jwtService.validateToken(token);
@@ -42,7 +47,8 @@ class JwtServiceTest {
 
 	@Test
 	void shouldIssueValidToken() {
-		var user = new User();
+		var user = podamFactory.manufacturePojo(User.class);
+		;
 		user.setId(1);
 		var token = jwtService.issueToken(user);
 

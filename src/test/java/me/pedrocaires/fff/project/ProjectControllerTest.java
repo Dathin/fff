@@ -9,6 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
+import uk.co.jemos.podam.api.PodamFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 import java.util.ArrayList;
 
@@ -19,6 +21,8 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ProjectControllerTest {
 
+	PodamFactory podamFactory = new PodamFactoryImpl();
+
 	@Mock
 	ProjectService projectService;
 
@@ -27,8 +31,9 @@ class ProjectControllerTest {
 
 	@Test
 	void shouldCreateProject() {
-		var createProjectRequest = new CreateProjectRequest();
-		var createProjectResponse = new CreateProjectResponse();
+
+		var createProjectRequest = podamFactory.manufacturePojo(CreateProjectRequest.class);
+		var createProjectResponse = podamFactory.manufacturePojo(CreateProjectResponse.class);
 		when(projectService.createProjectForAccountId(createProjectRequest)).thenReturn(createProjectResponse);
 
 		var createdUserResponseEntity = projectController.createProject(createProjectRequest);
@@ -40,7 +45,7 @@ class ProjectControllerTest {
 
 	@Test
 	void shouldGetProjects() {
-		var projectsResponse = new ArrayList<ProjectResponse>();
+		var projectsResponse = podamFactory.manufacturePojo(ArrayList.class, ProjectResponse.class);
 		when(projectService.getProjectsFromAccountId()).thenReturn(projectsResponse);
 
 		var createdUserResponseEntity = projectController.getProjects();

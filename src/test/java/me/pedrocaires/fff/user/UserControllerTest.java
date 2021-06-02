@@ -1,7 +1,5 @@
 package me.pedrocaires.fff.user;
 
-import me.pedrocaires.fff.account.model.CreateAccountRequest;
-import me.pedrocaires.fff.account.model.CreateAccountResponse;
 import me.pedrocaires.fff.user.model.CreateUserRequest;
 import me.pedrocaires.fff.user.model.CreateUserResponse;
 import me.pedrocaires.fff.user.model.LoginRequest;
@@ -12,6 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
+import uk.co.jemos.podam.api.PodamFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -19,6 +19,8 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
+
+	PodamFactory podamFactory = new PodamFactoryImpl();
 
 	@Mock
 	UserService userService;
@@ -28,8 +30,8 @@ class UserControllerTest {
 
 	@Test
 	void shouldCreateAccount() {
-		var createUserRequest = new CreateUserRequest();
-		var createUserResponse = new CreateUserResponse();
+		var createUserRequest = podamFactory.manufacturePojo(CreateUserRequest.class);
+		var createUserResponse = podamFactory.manufacturePojo(CreateUserResponse.class);
 		when(userService.createUser(createUserRequest)).thenReturn(createUserResponse);
 
 		var createdUserResponseEntity = userController.createUser(createUserRequest);
@@ -41,8 +43,8 @@ class UserControllerTest {
 
 	@Test
 	void shouldLogin() {
-		var loginRequest = new LoginRequest();
-		var loginResponse = new LoginResponse();
+		var loginRequest = podamFactory.manufacturePojo(LoginRequest.class);
+		var loginResponse = podamFactory.manufacturePojo(LoginResponse.class);
 		when(userService.login(loginRequest)).thenReturn(loginResponse);
 
 		var createdUserResponseEntity = userController.login(loginRequest);
