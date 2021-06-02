@@ -1,7 +1,5 @@
 - Sonarq
 - Unit test
-- USER e-mail, multiplas accounts
-- PROJETO
 - USER GET
 - ACCOUNT GET
 - ENVIRONMENT
@@ -10,6 +8,7 @@
 - Web
 - Spring format
 - Migrations
+- USER e-mail, multiplas accounts
 
 swagger, spring secutiry, redis, unit test, default error handling
 
