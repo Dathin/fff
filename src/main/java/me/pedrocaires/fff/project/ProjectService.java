@@ -24,16 +24,16 @@ public class ProjectService {
         this.userService = userService;
     }
 
-    public List<ProjectResponse> getProjects() {
+    public List<ProjectResponse> getProjectsFromAccountId() {
         var accountId = userService.getAuthenticatedUser().orElseThrow(UnauthorizedException::new).getAccountId();
         var projects = projectRepository.getProjectsByAccountId(accountId);
         return projectMapper.projectsToProjectsResponse(projects);
     }
 
 
-    public CreateProjectResponse createProjects(CreateProjectRequest createProjectRequest) {
+    public CreateProjectResponse createProjectForAccountId(CreateProjectRequest createProjectRequest) {
         var accountId = userService.getAuthenticatedUser().orElseThrow(UnauthorizedException::new).getAccountId();
         var project = projectRepository.insert(createProjectRequest, accountId);
-        return projectMapper.projectToProjectResponse(project);
+        return projectMapper.projectToCreateProjectResponse(project);
     }
 }

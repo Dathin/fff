@@ -20,12 +20,12 @@ public class ProjectController {
 
     @GetMapping
     public ResponseEntity<List<ProjectResponse>> getProjects(){
-        return ResponseEntity.ok(projectService.getProjects());
+        return ResponseEntity.ok(projectService.getProjectsFromAccountId());
     }
 
     @PostMapping
     public ResponseEntity<CreateProjectResponse> createProject(@RequestBody CreateProjectRequest createProjectRequest){
-        return ResponseEntity.ok(projectService.createProjects(createProjectRequest));
+        return ResponseEntity.ok(projectService.createProjectForAccountId(createProjectRequest));
     }
 
 }
