@@ -38,7 +38,7 @@ public class SwaggerConfig {
     }
 
     private ApiKey apiKey(){
-        return new ApiKey("Bearer auth token", "Authorization", "header");
+        return new ApiKey("Authorization", "Authorization", "header");
     }
 
     private SecurityContext securityContext(){
@@ -49,7 +49,7 @@ public class SwaggerConfig {
         var authorizationScope = new AuthorizationScope("global", "Identify you and your account to access restrict content");
         var authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
-        return Collections.singletonList(new SecurityReference("Bearer auth token",
+        return Collections.singletonList(new SecurityReference("Authorization",
                 authorizationScopes));
     }
 

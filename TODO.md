@@ -1,6 +1,3 @@
-- Spring format
-- USER e-mail, multiplas accounts
-- PROJETO
 - USER GET
 - ACCOUNT GET
 - ENVIRONMENT
@@ -8,6 +5,8 @@
 - Client
 - Web
 - Migrations
+- USER e-mail, multiplas accounts
+- Spring format
 
 swagger, spring secutiry, redis, unit test, default error handling
 
