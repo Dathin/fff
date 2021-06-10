@@ -1,6 +1,7 @@
 package me.pedrocaires.fff.featureflag;
 
 import me.pedrocaires.fff.environment.EnvironmentService;
+import me.pedrocaires.fff.exception.FeatureFlagDoesNotExistException;
 import me.pedrocaires.fff.exception.alreadyexist.FeatureFlagAlreadyExistException;
 import me.pedrocaires.fff.exception.integrity.EnvironmentIntegrityException;
 import me.pedrocaires.fff.featureflag.model.CreateFeatureFlagRequest;
@@ -44,8 +45,7 @@ public class FeatureFlagService {
 
 	@Cacheable(value = "featureFlag")
 	public FeatureFlagResponse getFeatureFlag(FeatureFlagRequest featureFlagRequest, int accountId) {
-		// colocar cacheable do springfox
-		var featureFlag = featureFlagRepository.getFeatureFlag(featureFlagRequest, accountId);
+		var featureFlag = featureFlagRepository.getFeatureFlag(featureFlagRequest, accountId).orElseThrow(FeatureFlagDoesNotExistException::new);
 		return featureFlagMapper.featureFlagToFeatureFlagResponse(featureFlag);
 	}
 

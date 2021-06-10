@@ -1,6 +1,7 @@
 package me.pedrocaires.fff.user;
 
 import me.pedrocaires.fff.daoutils.ReturningCountCallbackHandler;
+import me.pedrocaires.fff.daoutils.resultsetextractor.UserResultSetExtractor;
 import me.pedrocaires.fff.user.model.CreateUserRequest;
 import me.pedrocaires.fff.user.model.LoginRequest;
 import me.pedrocaires.fff.user.model.User;
@@ -19,48 +20,30 @@ public class UserRepository {
 
 	private final ReturningCountCallbackHandler returningCountCallbackHandler;
 
-	private final ResultSetExtractor<Optional<User>> optionalUserResultSetExtractor = resultSet -> {
-		if (resultSet.next()) {
-			var user = resultSetUser(resultSet);
-			return Optional.of(user);
-		}
-		return Optional.empty();
-	};
+	private final UserResultSetExtractor userResultSetExtractor;
 
-	private final ResultSetExtractor<User> userResultSetExtractor = resultSet -> {
-		resultSet.next();
-		return resultSetUser(resultSet);
-	};
 
-	public UserRepository(JdbcTemplate jdbcTemplate, ReturningCountCallbackHandler returningCountCallbackHandler) {
+	public UserRepository(JdbcTemplate jdbcTemplate, ReturningCountCallbackHandler returningCountCallbackHandler, UserResultSetExtractor userResultSetExtractor) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.returningCountCallbackHandler = returningCountCallbackHandler;
+		this.userResultSetExtractor = userResultSetExtractor;
 	}
 
 	public User insert(CreateUserRequest createUserRequest) {
 		return jdbcTemplate.query(
 				"INSERT INTO USERS (NAME, ACCOUNT_ID, PASSWORD) VALUES (?, ?, ?) RETURNING ID, NAME, ACCOUNT_ID, PASSWORD",
-				userResultSetExtractor, createUserRequest.getName(), createUserRequest.getAccountId(),
+				userResultSetExtractor.extractObject(), createUserRequest.getName(), createUserRequest.getAccountId(),
 				createUserRequest.getPassword());
 	}
 
 	public Optional<User> getPasswordToLogin(LoginRequest loginRequest) {
 		return jdbcTemplate.query("SELECT * FROM USERS WHERE ACCOUNT_ID = ? AND NAME = ? LIMIT 1",
-				optionalUserResultSetExtractor, loginRequest.getAccountId(), loginRequest.getName());
+				userResultSetExtractor.extractOptional(), loginRequest.getAccountId(), loginRequest.getName());
 	}
 
 	public int countByAccountId(int accountId) {
 		return jdbcTemplate.query("SELECT COUNT(1) FROM USERS WHERE ACCOUNT_ID = ?", returningCountCallbackHandler,
 				accountId);
-	}
-
-	private User resultSetUser(ResultSet resultSet) throws SQLException {
-		var user = new User();
-		user.setId(resultSet.getInt("ID"));
-		user.setAccountId(resultSet.getInt("ACCOUNT_ID"));
-		user.setName(resultSet.getString("NAME"));
-		user.setPassword(resultSet.getString("PASSWORD"));
-		return user;
 	}
 
 }

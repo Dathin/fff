@@ -1,5 +1,7 @@
 package me.pedrocaires.fff.featureflag.model;
 
+import java.util.Objects;
+
 public class FeatureFlagRequest {
 
 	private int id;
@@ -22,4 +24,16 @@ public class FeatureFlagRequest {
 		this.name = name;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		FeatureFlagRequest that = (FeatureFlagRequest) o;
+		return id == that.id && Objects.equals(name, that.name);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, name);
+	}
 }

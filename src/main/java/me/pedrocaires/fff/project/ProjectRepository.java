@@ -1,6 +1,7 @@
 package me.pedrocaires.fff.project;
 
 import me.pedrocaires.fff.daoutils.ExistsCallbackHandler;
+import me.pedrocaires.fff.daoutils.resultsetextractor.ProjectResultSetExtractor;
 import me.pedrocaires.fff.project.models.CreateProjectRequest;
 import me.pedrocaires.fff.project.models.Project;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,35 +19,21 @@ public class ProjectRepository {
 
 	private final ExistsCallbackHandler existsCallbackHandler;
 
-	public ProjectRepository(JdbcTemplate jdbcTemplate, ExistsCallbackHandler existsCallbackHandler) {
+	private final ProjectResultSetExtractor projectResultSetExtractor;
+
+	public ProjectRepository(JdbcTemplate jdbcTemplate, ExistsCallbackHandler existsCallbackHandler, ProjectResultSetExtractor projectResultSetExtractor) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.existsCallbackHandler = existsCallbackHandler;
+		this.projectResultSetExtractor = projectResultSetExtractor;
 	}
 
 	public List<Project> getProjectsByAccountId(int accountId) {
-		return jdbcTemplate.query("SELECT ID, NAME, ACCOUNT_ID FROM PROJECTS WHERE ACCOUNT_ID = ?", resultSet -> {
-			var projects = new ArrayList<Project>();
-			while (resultSet.next()) {
-				projects.add(resultSetProject(resultSet));
-			}
-			return projects;
-		}, accountId);
+		return jdbcTemplate.query("SELECT ID, NAME, ACCOUNT_ID FROM PROJECTS WHERE ACCOUNT_ID = ?", projectResultSetExtractor.extractList(), accountId);
 	}
 
 	public Project insert(CreateProjectRequest createProjectRequest, int accountId) {
 		return jdbcTemplate.query(
-				"INSERT INTO PROJECTS (NAME, ACCOUNT_ID) VALUES (?, ?) RETURNING ID, NAME, ACCOUNT_ID", resultSet -> {
-					resultSet.next();
-					return resultSetProject(resultSet);
-				}, createProjectRequest.getName(), accountId);
-	}
-
-	private Project resultSetProject(ResultSet resultSet) throws SQLException {
-		var project = new Project();
-		project.setId(resultSet.getInt("ID"));
-		project.setName(resultSet.getString("NAME"));
-		project.setAccountId(resultSet.getInt("ACCOUNT_ID"));
-		return project;
+				"INSERT INTO PROJECTS (NAME, ACCOUNT_ID) VALUES (?, ?) RETURNING ID, NAME, ACCOUNT_ID", projectResultSetExtractor.extractObject(), createProjectRequest.getName(), accountId);
 	}
 
 	public boolean isFromAccountId(int projectId, int accountId) {
