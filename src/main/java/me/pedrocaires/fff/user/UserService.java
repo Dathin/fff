@@ -1,9 +1,7 @@
 package me.pedrocaires.fff.user;
 
-import me.pedrocaires.fff.exception.AccountDoesNotExistException;
-import me.pedrocaires.fff.exception.InvalidCreateUserOnAccount;
-import me.pedrocaires.fff.exception.UserAlreadyExistException;
-import me.pedrocaires.fff.exception.UserDoesNotExistException;
+import me.pedrocaires.fff.exception.*;
+import me.pedrocaires.fff.exception.alreadyexist.UserAlreadyExistException;
 import me.pedrocaires.fff.user.model.*;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -61,7 +59,7 @@ public class UserService {
 		if (userRepository.countByAccountId(createUserRequest.getAccountId()) == 0) {
 			return insertFirstAccountUser(createUserRequest);
 		}
-		throw new InvalidCreateUserOnAccount();
+		throw new InvalidCreateUserOnAccountException();
 	}
 
 	private CreateUserResponse insertNewUserToAuthenticatedAccount(User authenticatedUser,
@@ -96,6 +94,10 @@ public class UserService {
 			return Optional.of((UserToken) userToken);
 		}
 		return Optional.empty();
+	}
+
+	public UserToken getOrThrowAuthenticatedUser() {
+		return getAuthenticatedUser().orElseThrow(UnauthorizedException::new);
 	}
 
 	public void setAuthenticatedUser(UserToken userToken) {

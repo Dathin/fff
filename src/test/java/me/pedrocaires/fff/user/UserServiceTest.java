@@ -1,8 +1,8 @@
 package me.pedrocaires.fff.user;
 
 import me.pedrocaires.fff.exception.AccountDoesNotExistException;
-import me.pedrocaires.fff.exception.InvalidCreateUserOnAccount;
-import me.pedrocaires.fff.exception.UserAlreadyExistException;
+import me.pedrocaires.fff.exception.InvalidCreateUserOnAccountException;
+import me.pedrocaires.fff.exception.alreadyexist.UserAlreadyExistException;
 import me.pedrocaires.fff.exception.UserDoesNotExistException;
 import me.pedrocaires.fff.user.model.CreateUserRequest;
 import me.pedrocaires.fff.user.model.LoginRequest;
@@ -95,7 +95,7 @@ class UserServiceTest {
 		mockAuthenticationWithoutUser();
 		when(userRepository.countByAccountId(createUserRequest.getAccountId())).thenReturn(1);
 
-		assertThrows(InvalidCreateUserOnAccount.class, () -> userService.createUser(createUserRequest));
+		assertThrows(InvalidCreateUserOnAccountException.class, () -> userService.createUser(createUserRequest));
 	}
 
 	@Test
@@ -105,7 +105,7 @@ class UserServiceTest {
 		mockAuthenticationWithoutUser();
 		when(userRepository.countByAccountId(createUserRequest.getAccountId())).thenReturn(1);
 
-		assertThrows(InvalidCreateUserOnAccount.class, () -> userService.createUser(createUserRequest));
+		assertThrows(InvalidCreateUserOnAccountException.class, () -> userService.createUser(createUserRequest));
 		verify(createUserRequest).setPassword(encryptedPassword);
 	}
 

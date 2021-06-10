@@ -1,5 +1,6 @@
 package me.pedrocaires.fff.project;
 
+import me.pedrocaires.fff.daoutils.ExistsCallbackHandler;
 import me.pedrocaires.fff.project.models.CreateProjectRequest;
 import me.pedrocaires.fff.project.models.Project;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,8 +16,11 @@ public class ProjectRepository {
 
 	private final JdbcTemplate jdbcTemplate;
 
-	public ProjectRepository(JdbcTemplate jdbcTemplate) {
+	private final ExistsCallbackHandler existsCallbackHandler;
+
+	public ProjectRepository(JdbcTemplate jdbcTemplate, ExistsCallbackHandler existsCallbackHandler) {
 		this.jdbcTemplate = jdbcTemplate;
+		this.existsCallbackHandler = existsCallbackHandler;
 	}
 
 	public List<Project> getProjectsByAccountId(int accountId) {
@@ -43,6 +47,11 @@ public class ProjectRepository {
 		project.setName(resultSet.getString("NAME"));
 		project.setAccountId(resultSet.getInt("ACCOUNT_ID"));
 		return project;
+	}
+
+	public boolean isFromAccountId(int projectId, int accountId) {
+		return jdbcTemplate.query("SELECT EXISTS ( SELECT 1 FROM PROJECTS WHERE ID = ? AND ACCOUNT_ID = ?)",
+				existsCallbackHandler, projectId, accountId);
 	}
 
 }

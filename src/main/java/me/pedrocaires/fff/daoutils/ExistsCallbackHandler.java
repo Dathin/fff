@@ -8,12 +8,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Component
-public class ReturningCountCallbackHandler implements ResultSetExtractor<Integer> {
+public class ExistsCallbackHandler implements ResultSetExtractor<Boolean> {
 
 	@Override
-	public Integer extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+	public Boolean extractData(ResultSet resultSet) throws SQLException, DataAccessException {
 		resultSet.next();
-		return resultSet.getInt("COUNT");
+		return resultSet.getBoolean("EXISTS");
 	}
 
 }

@@ -1,10 +1,8 @@
 package me.pedrocaires.fff.project;
 
-import me.pedrocaires.fff.exception.UnauthorizedException;
 import me.pedrocaires.fff.project.models.CreateProjectRequest;
 import me.pedrocaires.fff.project.models.CreateProjectResponse;
 import me.pedrocaires.fff.project.models.ProjectResponse;
-import me.pedrocaires.fff.user.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,24 +14,23 @@ public class ProjectService {
 
 	private final ProjectMapper projectMapper;
 
-	private final UserService userService;
-
-	public ProjectService(ProjectRepository projectRepository, ProjectMapper projectMapper, UserService userService) {
+	public ProjectService(ProjectRepository projectRepository, ProjectMapper projectMapper) {
 		this.projectRepository = projectRepository;
 		this.projectMapper = projectMapper;
-		this.userService = userService;
 	}
 
-	public List<ProjectResponse> getProjectsFromAccountId() {
-		var accountId = userService.getAuthenticatedUser().orElseThrow(UnauthorizedException::new).getAccountId();
+	public List<ProjectResponse> getProjectsFromAccountId(int accountId) {
 		var projects = projectRepository.getProjectsByAccountId(accountId);
 		return projectMapper.projectsToProjectsResponse(projects);
 	}
 
-	public CreateProjectResponse createProjectForAccountId(CreateProjectRequest createProjectRequest) {
-		var accountId = userService.getAuthenticatedUser().orElseThrow(UnauthorizedException::new).getAccountId();
+	public CreateProjectResponse createProjectForAccountId(CreateProjectRequest createProjectRequest, int accountId) {
 		var project = projectRepository.insert(createProjectRequest, accountId);
 		return projectMapper.projectToCreateProjectResponse(project);
+	}
+
+	public boolean isFromAccountId(int projectId, int accountId) {
+		return projectRepository.isFromAccountId(projectId, accountId);
 	}
 
 }
