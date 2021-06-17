@@ -22,8 +22,8 @@ public class UserRepository {
 
 	private final UserResultSetExtractor userResultSetExtractor;
 
-
-	public UserRepository(JdbcTemplate jdbcTemplate, ReturningCountCallbackHandler returningCountCallbackHandler, UserResultSetExtractor userResultSetExtractor) {
+	public UserRepository(JdbcTemplate jdbcTemplate, ReturningCountCallbackHandler returningCountCallbackHandler,
+			UserResultSetExtractor userResultSetExtractor) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.returningCountCallbackHandler = returningCountCallbackHandler;
 		this.userResultSetExtractor = userResultSetExtractor;

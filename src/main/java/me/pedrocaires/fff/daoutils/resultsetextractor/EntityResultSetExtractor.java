@@ -10,34 +10,35 @@ import java.util.Optional;
 
 public abstract class EntityResultSetExtractor<T> {
 
-    protected EntityResultSetExtractor() {
-    }
+	protected EntityResultSetExtractor() {
+	}
 
-    abstract T rawExtraction(ResultSet resultSet) throws SQLException;
+	abstract T rawExtraction(ResultSet resultSet) throws SQLException;
 
-    public ResultSetExtractor<T> extractObject() {
-        return resultSet -> {
-            resultSet.next();
-            return rawExtraction(resultSet);
-        };
-    }
+	public ResultSetExtractor<T> extractObject() {
+		return resultSet -> {
+			resultSet.next();
+			return rawExtraction(resultSet);
+		};
+	}
 
-    public ResultSetExtractor<List<T>> extractList(){
-        return resultSet -> {
-            var list = new ArrayList<T>();
-            while (resultSet.next()){
-                list.add(rawExtraction(resultSet));
-            }
-            return list;
-        };
-    }
+	public ResultSetExtractor<List<T>> extractList() {
+		return resultSet -> {
+			var list = new ArrayList<T>();
+			while (resultSet.next()) {
+				list.add(rawExtraction(resultSet));
+			}
+			return list;
+		};
+	}
 
-    public ResultSetExtractor<Optional<T>> extractOptional(){
-        return resultSet -> {
-            if (resultSet.next()){
-                return Optional.of(rawExtraction(resultSet));
-            }
-            return Optional.empty();
-        };
-    }
+	public ResultSetExtractor<Optional<T>> extractOptional() {
+		return resultSet -> {
+			if (resultSet.next()) {
+				return Optional.of(rawExtraction(resultSet));
+			}
+			return Optional.empty();
+		};
+	}
+
 }

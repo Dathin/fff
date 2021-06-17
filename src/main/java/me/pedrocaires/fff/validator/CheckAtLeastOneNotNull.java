@@ -14,42 +14,44 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Target( { TYPE })
+@Target({ TYPE })
 @Retention(RUNTIME)
 @Constraint(validatedBy = CheckAtLeastOneNotNull.CheckAtLeastOneNotNullValidator.class)
 @Documented
 public @interface CheckAtLeastOneNotNull {
 
-    String message();
+	String message();
 
-    Class<?>[] groups() default {};
+	Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default {};
+	Class<? extends Payload>[] payload() default {};
 
-    String[] fieldNames();
+	String[] fieldNames();
 
-    public static class CheckAtLeastOneNotNullValidator implements ConstraintValidator<CheckAtLeastOneNotNull, Object> {
+	public static class CheckAtLeastOneNotNullValidator implements ConstraintValidator<CheckAtLeastOneNotNull, Object> {
 
-        private String[] fieldNames;
+		private String[] fieldNames;
 
-        public void initialize(CheckAtLeastOneNotNull constraintAnnotation) {
-            this.fieldNames = constraintAnnotation.fieldNames();
-        }
+		public void initialize(CheckAtLeastOneNotNull constraintAnnotation) {
+			this.fieldNames = constraintAnnotation.fieldNames();
+		}
 
-        public boolean isValid(Object object, ConstraintValidatorContext constraintContext) {
-            var beanWrapper = new BeanWrapperImpl(object);
+		public boolean isValid(Object object, ConstraintValidatorContext constraintContext) {
+			var beanWrapper = new BeanWrapperImpl(object);
 
-            var hasNotNull = false;
+			var hasNotNull = false;
 
-            for (var f : fieldNames) {
-                var fieldValue = beanWrapper.getPropertyValue(f);
+			for (var f : fieldNames) {
+				var fieldValue = beanWrapper.getPropertyValue(f);
 
-                if (fieldValue != null) {
-                    hasNotNull = true;
-                }
-            }
+				if (fieldValue != null) {
+					hasNotNull = true;
+				}
+			}
 
-            return hasNotNull;
-        }
-    }
+			return hasNotNull;
+		}
+
+	}
+
 }

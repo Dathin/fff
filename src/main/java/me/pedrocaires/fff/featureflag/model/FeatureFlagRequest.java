@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.Positive;
 import java.util.Objects;
 
-@CheckAtLeastOneNotNull(message = "id or name must not be null", fieldNames = {"id", "name"})
+@CheckAtLeastOneNotNull(message = "id or name must not be null", fieldNames = { "id", "name" })
 public class FeatureFlagRequest {
 
 	@Positive
@@ -33,8 +33,10 @@ public class FeatureFlagRequest {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 		FeatureFlagRequest that = (FeatureFlagRequest) o;
 		return id == that.id && Objects.equals(name, that.name);
 	}
@@ -43,4 +45,5 @@ public class FeatureFlagRequest {
 	public int hashCode() {
 		return Objects.hash(id, name);
 	}
+
 }

@@ -29,8 +29,7 @@ public class SwaggerConfig {
 				.globalResponses(HttpMethod.GET, defaultResponseMessages())
 				.globalResponses(HttpMethod.POST, defaultResponseMessages())
 				.globalResponses(HttpMethod.PUT, defaultResponseMessages())
-				.globalResponses(HttpMethod.DELETE, defaultResponseMessages())
-				.select()
+				.globalResponses(HttpMethod.DELETE, defaultResponseMessages()).select()
 				.apis(RequestHandlerSelectors.withClassAnnotation(RestController.class)).paths(PathSelectors.any())
 				.build().apiInfo(metaData()).securitySchemes(Collections.singletonList(apiKey()))
 				.securityContexts(Collections.singletonList(securityContext()));
@@ -60,45 +59,32 @@ public class SwaggerConfig {
 				.licenseUrl("https://www.apache.org/licenses/LICENSE-2.0.html").build();
 	}
 
-	private List<Response> defaultResponseMessages(){
+	private List<Response> defaultResponseMessages() {
 		var responseList = new ArrayList<Response>();
 		var mediaType = "application/json";
 
-		responseList.add(new ResponseBuilder()
-				.code("400")
-				.examples(Collections.singletonList(
-						new Example("1",
-								"Bad Request",
-								"Bad Request",
-								Collections.singletonList(new FormValidationResponse("myField", "error description")),
-								"1", mediaType))).build());
+		responseList.add(new ResponseBuilder().code("400")
+				.examples(Collections.singletonList(new Example("1", "Bad Request", "Bad Request",
+						Collections.singletonList(new FormValidationResponse("myField", "error description")), "1",
+						mediaType)))
+				.build());
 
-		responseList.add(new ResponseBuilder()
-						.code("401")
-						.examples(Collections.singletonList(
-								new Example("2",
-										"Unauthorized",
-										"Unauthorized",
-										new ExceptionResponse("Full authentication is required to access this resource"),
-										"2", mediaType))).build());
+		responseList.add(new ResponseBuilder().code("401")
+				.examples(Collections.singletonList(new Example("2", "Unauthorized", "Unauthorized",
+						new ExceptionResponse("Full authentication is required to access this resource"), "2",
+						mediaType)))
+				.build());
 
-		responseList.add(new ResponseBuilder()
-				.code("4XX")
-				.examples(Collections.singletonList(
-						new Example("3",
-								"Server Custom Exception",
-								"Server Custom Exception",
-								new ExceptionResponse("Custom exception description"),
-								"4", mediaType))).build());
+		responseList.add(new ResponseBuilder().code("4XX")
+				.examples(
+						Collections.singletonList(new Example("3", "Server Custom Exception", "Server Custom Exception",
+								new ExceptionResponse("Custom exception description"), "4", mediaType)))
+				.build());
 
-		responseList.add(new ResponseBuilder()
-				.code("500")
-				.examples(Collections.singletonList(
-						new Example("5",
-								"Internal Server Error",
-								"Internal Server Error",
-								new ExceptionResponse("Something unusual happened, please try again"),
-								"5", mediaType))).build());
+		responseList.add(new ResponseBuilder().code("500")
+				.examples(Collections.singletonList(new Example("5", "Internal Server Error", "Internal Server Error",
+						new ExceptionResponse("Something unusual happened, please try again"), "5", mediaType)))
+				.build());
 		return responseList;
 	}
 

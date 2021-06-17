@@ -7,7 +7,6 @@ import me.pedrocaires.fff.featureflag.model.FeatureFlagResponse;
 import me.pedrocaires.fff.user.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.Cacheable;
 
 import javax.validation.Valid;
 
@@ -19,23 +18,28 @@ public class FeatureFlagController {
 
 	private final UserService userService;
 
-	public FeatureFlagController(FeatureFlagService featureFlagService, UserService userService) {
+	private final FeatureFlagMapper featureFlagMapper;
+
+	public FeatureFlagController(FeatureFlagService featureFlagService, UserService userService,
+			FeatureFlagMapper featureFlagMapper) {
 		this.featureFlagService = featureFlagService;
 		this.userService = userService;
+		this.featureFlagMapper = featureFlagMapper;
 	}
 
 	@PostMapping
 	public ResponseEntity<CreateFeatureFlagResponse> createFeatureFlag(
 			@Valid @RequestBody CreateFeatureFlagRequest createFeatureFlagRequest) {
 		var accountId = userService.getOrThrowAuthenticatedUser().getAccountId();
-		return ResponseEntity.ok(featureFlagService.createFeatureFlag(createFeatureFlagRequest, accountId));
+		var createdFeatureFlag = featureFlagService.createFeatureFlag(createFeatureFlagRequest, accountId);
+		return ResponseEntity.ok(featureFlagMapper.featureFlagToCreateFeatureFlagResponse(createdFeatureFlag));
 	}
 
 	@GetMapping
 	public ResponseEntity<FeatureFlagResponse> getFeatureFlag(@Valid FeatureFlagRequest featureFlagRequest) {
 		var accountId = userService.getOrThrowAuthenticatedUser().getAccountId();
-		var a = featureFlagService.getFeatureFlag(featureFlagRequest, accountId);
-		return ResponseEntity.ok(a);
+		var featureFlag = featureFlagService.getFeatureFlag(featureFlagRequest, accountId);
+		return ResponseEntity.ok(featureFlagMapper.featureFlagToFeatureFlagResponse(featureFlag));
 	}
 
 }

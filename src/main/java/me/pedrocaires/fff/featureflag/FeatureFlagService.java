@@ -4,10 +4,7 @@ import me.pedrocaires.fff.environment.EnvironmentService;
 import me.pedrocaires.fff.exception.FeatureFlagDoesNotExistException;
 import me.pedrocaires.fff.exception.alreadyexist.FeatureFlagAlreadyExistException;
 import me.pedrocaires.fff.exception.integrity.EnvironmentIntegrityException;
-import me.pedrocaires.fff.featureflag.model.CreateFeatureFlagRequest;
-import me.pedrocaires.fff.featureflag.model.CreateFeatureFlagResponse;
-import me.pedrocaires.fff.featureflag.model.FeatureFlagRequest;
-import me.pedrocaires.fff.featureflag.model.FeatureFlagResponse;
+import me.pedrocaires.fff.featureflag.model.*;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -19,22 +16,16 @@ public class FeatureFlagService {
 
 	private final EnvironmentService environmentService;
 
-	private final FeatureFlagMapper featureFlagMapper;
-
-	public FeatureFlagService(FeatureFlagRepository featureFlagRepository, EnvironmentService environmentService,
-			FeatureFlagMapper featureFlagMapper) {
+	public FeatureFlagService(FeatureFlagRepository featureFlagRepository, EnvironmentService environmentService) {
 		this.featureFlagRepository = featureFlagRepository;
 		this.environmentService = environmentService;
-		this.featureFlagMapper = featureFlagMapper;
 	}
 
-	public CreateFeatureFlagResponse createFeatureFlag(CreateFeatureFlagRequest createFeatureFlagRequest,
-			int accountId) {
+	public FeatureFlag createFeatureFlag(CreateFeatureFlagRequest createFeatureFlagRequest, int accountId) {
 		// inserir em todos os envs e quando criar um env novo criar tudinho dnv
 		try {
 			if (environmentService.isFromAccountId(createFeatureFlagRequest.getEnvironmentId(), accountId)) {
-				var featureFlag = featureFlagRepository.createFeatureFlag(createFeatureFlagRequest);
-				return featureFlagMapper.featureFlagToCreateFeatureFlagResponse(featureFlag);
+				return featureFlagRepository.createFeatureFlag(createFeatureFlagRequest);
 			}
 		}
 		catch (DuplicateKeyException ex) {
@@ -44,9 +35,9 @@ public class FeatureFlagService {
 	}
 
 	@Cacheable(value = "featureFlag")
-	public FeatureFlagResponse getFeatureFlag(FeatureFlagRequest featureFlagRequest, int accountId) {
-		var featureFlag = featureFlagRepository.getFeatureFlag(featureFlagRequest, accountId).orElseThrow(FeatureFlagDoesNotExistException::new);
-		return featureFlagMapper.featureFlagToFeatureFlagResponse(featureFlag);
+	public FeatureFlag getFeatureFlag(FeatureFlagRequest featureFlagRequest, int accountId) {
+		return featureFlagRepository.getFeatureFlag(featureFlagRequest, accountId)
+				.orElseThrow(FeatureFlagDoesNotExistException::new);
 	}
 
 }

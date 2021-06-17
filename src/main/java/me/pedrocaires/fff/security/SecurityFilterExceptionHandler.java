@@ -25,7 +25,7 @@ public class SecurityFilterExceptionHandler implements AuthenticationEntryPoint 
 
 	@Override
 	public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-			AuthenticationException ex) throws IOException, ServletException {
+			AuthenticationException ex) throws IOException {
 		httpServletResponse.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
 		httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
 		httpServletResponse.getWriter().write(objectMapper.writeValueAsString(new ExceptionResponse(ex.getMessage())));

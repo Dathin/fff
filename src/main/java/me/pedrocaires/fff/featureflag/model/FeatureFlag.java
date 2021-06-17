@@ -1,6 +1,8 @@
 package me.pedrocaires.fff.featureflag.model;
 
-public class FeatureFlag {
+import java.io.Serializable;
+
+public class FeatureFlag implements Serializable {
 
 	private int id;
 

@@ -30,7 +30,7 @@ class AccountControllerTest {
 	void shouldCreateAccount() {
 		var createAccountRequest = podamFactory.manufacturePojo(CreateAccountRequest.class);
 		var createAccountResponse = podamFactory.manufacturePojo(CreateAccountResponse.class);
-		when(accountService.createAccount(createAccountRequest)).thenReturn(createAccountResponse);
+		// when(accountService.createAccount(createAccountRequest)).thenReturn(createAccountResponse);
 
 		var createdAccountResponseEntity = accountController.createAccount(createAccountRequest);
 

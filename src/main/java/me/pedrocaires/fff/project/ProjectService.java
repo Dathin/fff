@@ -1,8 +1,7 @@
 package me.pedrocaires.fff.project;
 
 import me.pedrocaires.fff.project.models.CreateProjectRequest;
-import me.pedrocaires.fff.project.models.CreateProjectResponse;
-import me.pedrocaires.fff.project.models.ProjectResponse;
+import me.pedrocaires.fff.project.models.Project;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,21 +11,16 @@ public class ProjectService {
 
 	private final ProjectRepository projectRepository;
 
-	private final ProjectMapper projectMapper;
-
-	public ProjectService(ProjectRepository projectRepository, ProjectMapper projectMapper) {
+	public ProjectService(ProjectRepository projectRepository) {
 		this.projectRepository = projectRepository;
-		this.projectMapper = projectMapper;
 	}
 
-	public List<ProjectResponse> getProjectsFromAccountId(int accountId) {
-		var projects = projectRepository.getProjectsByAccountId(accountId);
-		return projectMapper.projectsToProjectsResponse(projects);
+	public List<Project> getProjectsFromAccountId(int accountId) {
+		return projectRepository.getProjectsByAccountId(accountId);
 	}
 
-	public CreateProjectResponse createProjectForAccountId(CreateProjectRequest createProjectRequest, int accountId) {
-		var project = projectRepository.insert(createProjectRequest, accountId);
-		return projectMapper.projectToCreateProjectResponse(project);
+	public Project createProjectForAccountId(CreateProjectRequest createProjectRequest, int accountId) {
+		return projectRepository.insert(createProjectRequest, accountId);
 	}
 
 	public boolean isFromAccountId(int projectId, int accountId) {

@@ -18,18 +18,23 @@ public class UserController {
 
 	private final UserService userService;
 
-	public UserController(UserService userService) {
+	private final UserMapper userMapper;
+
+	public UserController(UserService userService, UserMapper userMapper) {
 		this.userService = userService;
+		this.userMapper = userMapper;
 	}
 
 	@PostMapping
 	public ResponseEntity<CreateUserResponse> createUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
-		return ResponseEntity.ok(userService.createUser(createUserRequest));
+		var createdUser = userService.createUser(createUserRequest);
+		return ResponseEntity.ok(userMapper.userToCreateUserResponse(createdUser));
 	}
 
 	@PostMapping("login")
 	public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
-		return ResponseEntity.ok(userService.login(loginRequest));
+		var token = userService.login(loginRequest);
+		return ResponseEntity.ok(userMapper.tokenToLoginResponse(token));
 	}
 
 }

@@ -16,13 +16,18 @@ public class AccountController {
 
 	private final AccountService accountService;
 
-	public AccountController(AccountService accountService) {
+	private final AccountMapper accountMapper;
+
+	public AccountController(AccountService accountService, AccountMapper accountMapper) {
 		this.accountService = accountService;
+		this.accountMapper = accountMapper;
 	}
 
 	@PostMapping
-	public ResponseEntity<CreateAccountResponse> createAccount(@Valid @RequestBody CreateAccountRequest createAccountRequest) {
-		return ResponseEntity.ok(accountService.createAccount(createAccountRequest));
+	public ResponseEntity<CreateAccountResponse> createAccount(
+			@Valid @RequestBody CreateAccountRequest createAccountRequest) {
+		var createdAccount = accountService.createAccount(createAccountRequest);
+		return ResponseEntity.ok(accountMapper.accountToAccountResponse(createdAccount));
 	}
 
 }

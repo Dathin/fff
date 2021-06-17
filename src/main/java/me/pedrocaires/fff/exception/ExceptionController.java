@@ -31,10 +31,11 @@ public class ExceptionController {
 	}
 
 	@ExceptionHandler(BindException.class)
-	public ResponseEntity<List<FormValidationResponse>> handleValidationExceptions(BindException ex){
+	public ResponseEntity<List<FormValidationResponse>> handleValidationExceptions(BindException ex) {
 		logger.error("Controller advice caught at form", ex);
 		var formValidationsResponse = ex.getBindingResult().getAllErrors().stream().map(objectError -> {
-			var fieldError = objectError instanceof FieldError ? ((FieldError) objectError).getField() : ex.getObjectName();
+			var fieldError = objectError instanceof FieldError ? ((FieldError) objectError).getField()
+					: ex.getObjectName();
 			return new FormValidationResponse(fieldError, objectError.getDefaultMessage());
 		}).collect(Collectors.toList());
 		return ResponseEntity.badRequest().body(formValidationsResponse);

@@ -24,17 +24,13 @@ public class UserService {
 
 	private final JwtService jwtService;
 
-	private final UserMapper userMapper;
-
-	public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService,
-			UserMapper userMapper) {
+	public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.jwtService = jwtService;
-		this.userMapper = userMapper;
 	}
 
-	public CreateUserResponse createUser(CreateUserRequest createUserRequest) {
+	public User createUser(CreateUserRequest createUserRequest) {
 		encryptPassword(createUserRequest);
 		try {
 			return insertNewUser(createUserRequest);
@@ -51,7 +47,7 @@ public class UserService {
 		createUserRequest.setPassword(passwordEncoder.encode(createUserRequest.getPassword()));
 	}
 
-	private CreateUserResponse insertNewUser(CreateUserRequest createUserRequest) {
+	private User insertNewUser(CreateUserRequest createUserRequest) {
 		var optionalAuthenticatedUser = getAuthenticatedUser();
 		if (optionalAuthenticatedUser.isPresent()) {
 			var authenticatedUser = optionalAuthenticatedUser.get();
@@ -63,28 +59,24 @@ public class UserService {
 		throw new InvalidCreateUserOnAccountException();
 	}
 
-	private CreateUserResponse insertNewUserToAuthenticatedAccount(User authenticatedUser,
-			CreateUserRequest createUserRequest) {
+	private User insertNewUserToAuthenticatedAccount(User authenticatedUser, CreateUserRequest createUserRequest) {
 		createUserRequest.setAccountId(authenticatedUser.getAccountId());
-		var user = userRepository.insert(createUserRequest);
-		return userMapper.userToCreateUserResponse(user);
+		return userRepository.insert(createUserRequest);
 	}
 
-	private CreateUserResponse insertFirstAccountUser(CreateUserRequest createUserRequest) {
-		var user = userRepository.insert(createUserRequest);
-		return userMapper.userToCreateUserResponse(user);
+	private User insertFirstAccountUser(CreateUserRequest createUserRequest) {
+		return userRepository.insert(createUserRequest);
 	}
 
-	public LoginResponse login(LoginRequest loginRequest) {
+	public String login(LoginRequest loginRequest) {
 		var optionalUser = userRepository.getPasswordToLogin(loginRequest);
 		var user = optionalUser.orElseThrow(UserDoesNotExistException::new);
 		return checkPassword(user, loginRequest);
 	}
 
-	private LoginResponse checkPassword(User user, LoginRequest loginRequest) {
+	private String checkPassword(User user, LoginRequest loginRequest) {
 		if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-			var token = jwtService.issueToken(user);
-			return userMapper.tokenToLoginResponse(token);
+			return jwtService.issueToken(user);
 		}
 		throw new UserDoesNotExistException();
 	}

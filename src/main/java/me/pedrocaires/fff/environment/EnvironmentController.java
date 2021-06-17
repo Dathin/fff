@@ -19,16 +19,21 @@ public class EnvironmentController {
 
 	private final UserService userService;
 
-	public EnvironmentController(EnvironmentService environmentService, UserService userService) {
+	private final EnvironmentMapper environmentMapper;
+
+	public EnvironmentController(EnvironmentService environmentService, UserService userService,
+			EnvironmentMapper environmentMapper) {
 		this.environmentService = environmentService;
 		this.userService = userService;
+		this.environmentMapper = environmentMapper;
 	}
 
 	@PostMapping
 	public ResponseEntity<CreateEnvironmentResponse> createEnvironment(
 			@Valid @RequestBody CreateEnvironmentRequest createEnvironmentRequest) {
 		var userToken = userService.getOrThrowAuthenticatedUser();
-		return ResponseEntity.ok(environmentService.createEnvironment(createEnvironmentRequest, userToken));
+		var createdEnvironment = environmentService.createEnvironment(createEnvironmentRequest, userToken);
+		return ResponseEntity.ok(environmentMapper.environmentToCreateEnvironmentResponse(createdEnvironment));
 	}
 
 	// @GetMapping

@@ -32,7 +32,7 @@ class UserControllerTest {
 	void shouldCreateAccount() {
 		var createUserRequest = podamFactory.manufacturePojo(CreateUserRequest.class);
 		var createUserResponse = podamFactory.manufacturePojo(CreateUserResponse.class);
-		when(userService.createUser(createUserRequest)).thenReturn(createUserResponse);
+		// when(userService.createUser(createUserRequest)).thenReturn(createUserResponse);
 
 		var createdUserResponseEntity = userController.createUser(createUserRequest);
 
@@ -45,7 +45,7 @@ class UserControllerTest {
 	void shouldLogin() {
 		var loginRequest = podamFactory.manufacturePojo(LoginRequest.class);
 		var loginResponse = podamFactory.manufacturePojo(LoginResponse.class);
-		when(userService.login(loginRequest)).thenReturn(loginResponse);
+		// when(userService.login(loginRequest)).thenReturn(loginResponse);
 
 		var createdUserResponseEntity = userController.login(loginRequest);
 

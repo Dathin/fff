@@ -1,12 +1,8 @@
-- USER GET
-- ACCOUNT GET
-- ENVIRONMENT
-- FF
 - Client
 - Web
 - Migrations
 - USER e-mail, multiplas accounts
-- Spring format
+-  corrigir os unit tests
 
 swagger, spring secutiry, redis, unit test, default error handling
 

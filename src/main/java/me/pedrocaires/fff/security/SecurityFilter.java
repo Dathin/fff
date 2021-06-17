@@ -15,6 +15,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+
+import static me.pedrocaires.fff.security.OpenEndpoints.UN_AUTH_CUSTOM_ENDPOINTS;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
@@ -38,8 +41,9 @@ public class SecurityFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
 			FilterChain filterChain) throws ServletException, IOException {
 		var token = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
+		var path = httpServletRequest.getRequestURI();
 		try {
-			if (token != null) {
+			if (token != null && Arrays.stream(UN_AUTH_CUSTOM_ENDPOINTS).noneMatch(s -> s.equals(path))) {
 				setUserFromToken(token);
 			}
 			filterChain.doFilter(httpServletRequest, httpServletResponse);
