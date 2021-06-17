@@ -1,6 +1,8 @@
 package me.pedrocaires.fff.exception;
 
-public class ExceptionResponse {
+import java.io.Serializable;
+
+public class ExceptionResponse implements Serializable {
 
 	private final String message;
 

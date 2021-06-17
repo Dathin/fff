@@ -1,18 +1,25 @@
 package me.pedrocaires.fff.featureflag.model;
 
+import me.pedrocaires.fff.validator.CheckAtLeastOneNotNull;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.Positive;
 import java.util.Objects;
 
+@CheckAtLeastOneNotNull(message = "id or name must not be null", fieldNames = {"id", "name"})
 public class FeatureFlagRequest {
 
-	private int id;
+	@Positive
+	private Integer id;
 
+	@Length(min = 3, max = 50)
 	private String name;
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

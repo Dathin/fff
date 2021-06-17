@@ -29,14 +29,9 @@ public class FeatureFlagRepository {
 	}
 
 	public Optional<FeatureFlag> getFeatureFlag(FeatureFlagRequest featureFlagRequest, int accountId) {
-		// fazer o result set extractor
-		// não poderia ter chegado aqui se o id e name foram nulls
-		// fazer o validator
-		// response do swagger
 		// corrigir os unit tests
 		// mapper no lugar certo
 		// problema de auth
-		//tem que ser um optional karai
 		return jdbcTemplate.query(
 				"SELECT F.ID, F.NAME, F.ENVIRONMENT_ID FROM FEATURE_FLAGS AS F INNER JOIN ENVIRONMENTS AS E ON F.ENVIRONMENT_ID = E.ID INNER JOIN PROJECTS AS P ON E.PROJECT_ID = P.ID WHERE P.ACCOUNT_ID = ? AND (CAST(? AS INT) IS NULL OR F.ID = ?) AND (CAST(? AS VARCHAR) IS NULL OR F.NAME = ?) LIMIT 1",
 				featureFlagResultSetExtractor.extractOptional(), accountId, featureFlagRequest.getId(), featureFlagRequest.getId(), featureFlagRequest.getName(),

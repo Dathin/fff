@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -21,12 +23,12 @@ public class UserController {
 	}
 
 	@PostMapping
-	public ResponseEntity<CreateUserResponse> createUser(@RequestBody CreateUserRequest createUserRequest) {
+	public ResponseEntity<CreateUserResponse> createUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
 		return ResponseEntity.ok(userService.createUser(createUserRequest));
 	}
 
 	@PostMapping("login")
-	public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+	public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
 		return ResponseEntity.ok(userService.login(loginRequest));
 	}
 

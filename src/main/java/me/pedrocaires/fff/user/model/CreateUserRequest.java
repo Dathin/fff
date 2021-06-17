@@ -1,11 +1,22 @@
 package me.pedrocaires.fff.user.model;
 
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+
 public class CreateUserRequest {
 
+	@NotNull
+	@Length(min = 3, max = 50)
 	private String name;
 
-	private int accountId;
+	@NotNull
+	@Positive
+	private Integer accountId;
 
+	@NotNull
+	@Length(min = 10, max = 50)
 	private String password;
 
 	public String getName() {
@@ -16,11 +27,11 @@ public class CreateUserRequest {
 		this.name = name;
 	}
 
-	public int getAccountId() {
+	public Integer getAccountId() {
 		return accountId;
 	}
 
-	public void setAccountId(int accountId) {
+	public void setAccountId(Integer accountId) {
 		this.accountId = accountId;
 	}
 

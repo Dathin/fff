@@ -1,18 +1,28 @@
 package me.pedrocaires.fff.featureflag.model;
 
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+
 public class CreateFeatureFlagRequest {
 
-	private int environmentId;
+	@NotNull
+	@Positive
+	private Integer environmentId;
 
+	@NotNull
+	@Length(min = 3, max = 50)
 	private String name;
 
-	private boolean value;
+	@NotNull
+	private Boolean value;
 
-	public int getEnvironmentId() {
+	public Integer getEnvironmentId() {
 		return environmentId;
 	}
 
-	public void setEnvironmentId(int environmentId) {
+	public void setEnvironmentId(Integer environmentId) {
 		this.environmentId = environmentId;
 	}
 
@@ -24,11 +34,11 @@ public class CreateFeatureFlagRequest {
 		this.name = name;
 	}
 
-	public boolean isValue() {
+	public Boolean isValue() {
 		return value;
 	}
 
-	public void setValue(boolean value) {
+	public void setValue(Boolean value) {
 		this.value = value;
 	}
 

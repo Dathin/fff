@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/environment")
 public class EnvironmentController {
@@ -24,7 +26,7 @@ public class EnvironmentController {
 
 	@PostMapping
 	public ResponseEntity<CreateEnvironmentResponse> createEnvironment(
-			@RequestBody CreateEnvironmentRequest createEnvironmentRequest) {
+			@Valid @RequestBody CreateEnvironmentRequest createEnvironmentRequest) {
 		var userToken = userService.getOrThrowAuthenticatedUser();
 		return ResponseEntity.ok(environmentService.createEnvironment(createEnvironmentRequest, userToken));
 	}

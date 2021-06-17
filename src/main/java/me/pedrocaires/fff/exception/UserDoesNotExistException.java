@@ -1,5 +1,6 @@
 package me.pedrocaires.fff.exception;
 
+import me.pedrocaires.fff.exception.CustomException;
 import org.springframework.http.HttpStatus;
 
 public class UserDoesNotExistException extends CustomException {

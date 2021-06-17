@@ -2,6 +2,7 @@ package me.pedrocaires.fff.user;
 
 import me.pedrocaires.fff.exception.*;
 import me.pedrocaires.fff.exception.alreadyexist.UserAlreadyExistException;
+import me.pedrocaires.fff.exception.UserDoesNotExistException;
 import me.pedrocaires.fff.user.model.*;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;

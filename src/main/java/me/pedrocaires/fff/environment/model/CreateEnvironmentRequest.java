@@ -1,12 +1,22 @@
 package me.pedrocaires.fff.environment.model;
 
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+
 public class CreateEnvironmentRequest {
 
+	@NotNull
+	@Length(min = 3, max = 50)
 	private String name;
 
-	private int projectId;
+	@NotNull
+	@Positive
+	private Integer projectId;
 
-	private boolean forMe;
+	@NotNull
+	private Boolean forMe;
 
 	public String getName() {
 		return name;
@@ -16,19 +26,19 @@ public class CreateEnvironmentRequest {
 		this.name = name;
 	}
 
-	public int getProjectId() {
+	public Integer getProjectId() {
 		return projectId;
 	}
 
-	public void setProjectId(int projectId) {
+	public void setProjectId(Integer projectId) {
 		this.projectId = projectId;
 	}
 
-	public boolean isForUser() {
+	public Boolean isForUser() {
 		return forMe;
 	}
 
-	public void setForMe(boolean forMe) {
+	public void setForMe(Boolean forMe) {
 		this.forMe = forMe;
 	}
 
