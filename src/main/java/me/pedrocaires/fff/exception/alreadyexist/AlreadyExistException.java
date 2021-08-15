@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 public abstract class AlreadyExistException extends CustomException {
 
 	protected AlreadyExistException(String fields) {
-		super(String.format("%s already taken. Please choose different values or delete the old one.", fields),
+		super(String.format("%s already taken. Please choose different values.", fields),
 				HttpStatus.BAD_REQUEST);
 	}
 

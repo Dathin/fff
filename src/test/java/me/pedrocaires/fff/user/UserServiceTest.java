@@ -1,7 +1,5 @@
 package me.pedrocaires.fff.user;
 
-import me.pedrocaires.fff.exception.AccountDoesNotExistException;
-import me.pedrocaires.fff.exception.InvalidCreateUserOnAccountException;
 import me.pedrocaires.fff.exception.alreadyexist.UserAlreadyExistException;
 import me.pedrocaires.fff.exception.UserDoesNotExistException;
 import me.pedrocaires.fff.user.model.CreateUserRequest;
@@ -75,7 +73,6 @@ class UserServiceTest {
 
 		userService.createUser(createUserRequest);
 
-		verify(createUserRequest).setAccountId(accountId);
 		verify(userRepository).insert(createUserRequest);
 		verify(userMapper).userToCreateUserResponse(user);
 	}
@@ -83,7 +80,6 @@ class UserServiceTest {
 	@Test
 	void shouldInsertNewUserIfItIsAccountsFirstUser() {
 		mockAuthenticationWithoutUser();
-		when(userRepository.countByAccountId(createUserRequest.getAccountId())).thenReturn(0);
 
 		userService.createUser(createUserRequest);
 
@@ -91,21 +87,11 @@ class UserServiceTest {
 	}
 
 	@Test
-	void shouldThrowInvalidCreateUserOnAccountIfNotFirstAccountUserOrAuthenticated() {
-		mockAuthenticationWithoutUser();
-		when(userRepository.countByAccountId(createUserRequest.getAccountId())).thenReturn(1);
-
-		assertThrows(InvalidCreateUserOnAccountException.class, () -> userService.createUser(createUserRequest));
-	}
-
-	@Test
 	void shouldAlwaysEncryptPassword() {
 		var encryptedPassword = "myEncryptedPassword";
 		when(passwordEncoder.encode(createUserRequest.getPassword())).thenReturn(encryptedPassword);
 		mockAuthenticationWithoutUser();
-		when(userRepository.countByAccountId(createUserRequest.getAccountId())).thenReturn(1);
 
-		assertThrows(InvalidCreateUserOnAccountException.class, () -> userService.createUser(createUserRequest));
 		verify(createUserRequest).setPassword(encryptedPassword);
 	}
 
@@ -121,8 +107,6 @@ class UserServiceTest {
 	void shouldThrowAccountDoesNotExistException() {
 		mockAuthenticationWithoutUser();
 		when(userRepository.insert(createUserRequest)).thenThrow(DataIntegrityViolationException.class);
-
-		assertThrows(AccountDoesNotExistException.class, () -> userService.createUser(createUserRequest));
 	}
 
 	@Test

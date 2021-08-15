@@ -28,7 +28,7 @@ public @interface CheckAtLeastOneNotNull {
 
 	String[] fieldNames();
 
-	public static class CheckAtLeastOneNotNullValidator implements ConstraintValidator<CheckAtLeastOneNotNull, Object> {
+	class CheckAtLeastOneNotNullValidator implements ConstraintValidator<CheckAtLeastOneNotNull, Object> {
 
 		private String[] fieldNames;
 

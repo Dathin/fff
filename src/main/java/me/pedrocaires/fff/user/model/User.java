@@ -6,7 +6,7 @@ public class User implements Principal {
 
 	private int id;
 
-	private String name;
+	private String identifier;
 
 	private int accountId;
 
@@ -16,16 +16,20 @@ public class User implements Principal {
 		return id;
 	}
 
+	public String getIdentifier() {
+		return identifier;
+	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
 
 	public String getName() {
-		return name;
+		return getIdentifier();
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
 	}
 
 	public int getAccountId() {

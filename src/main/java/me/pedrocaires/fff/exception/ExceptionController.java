@@ -10,7 +10,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -31,14 +33,15 @@ public class ExceptionController {
 	}
 
 	@ExceptionHandler(BindException.class)
-	public ResponseEntity<List<FormValidationResponse>> handleValidationExceptions(BindException ex) {
+	public ResponseEntity<Map<String, String>> handleValidationExceptions(BindException ex) {
 		logger.error("Controller advice caught at form", ex);
-		var formValidationsResponse = ex.getBindingResult().getAllErrors().stream().map(objectError -> {
+		var formValidationResponse = new HashMap<String, String>();
+		ex.getBindingResult().getAllErrors().forEach(objectError -> {
 			var fieldError = objectError instanceof FieldError ? ((FieldError) objectError).getField()
 					: ex.getObjectName();
-			return new FormValidationResponse(fieldError, objectError.getDefaultMessage());
-		}).collect(Collectors.toList());
-		return ResponseEntity.badRequest().body(formValidationsResponse);
+			formValidationResponse.put(fieldError, objectError.getDefaultMessage());
+		});
+		return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(formValidationResponse);
 	}
 
 	private ResponseEntity<ExceptionResponse> buildDefaultExceptionResponseEntity(Exception ex, String message,

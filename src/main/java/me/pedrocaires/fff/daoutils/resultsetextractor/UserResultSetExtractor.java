@@ -13,8 +13,7 @@ public class UserResultSetExtractor extends EntityResultSetExtractor<User> {
 	User rawExtraction(ResultSet resultSet) throws SQLException {
 		var user = new User();
 		user.setId(resultSet.getInt("ID"));
-		user.setAccountId(resultSet.getInt("ACCOUNT_ID"));
-		user.setName(resultSet.getString("NAME"));
+		user.setIdentifier(resultSet.getString("IDENTIFIER"));
 		user.setPassword(resultSet.getString("PASSWORD"));
 		return user;
 	}

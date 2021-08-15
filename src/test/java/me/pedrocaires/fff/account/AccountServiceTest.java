@@ -32,11 +32,11 @@ class AccountServiceTest {
 	void shouldInsertAndMapResponse() {
 		var createAccountRequest = podamFactory.manufacturePojo(CreateAccountRequest.class);
 		var account = podamFactory.manufacturePojo(Account.class);
-		when(accountRepository.insert(createAccountRequest)).thenReturn(account);
+//		when(accountRepository.insert(createAccountRequest)).thenReturn(account);
 
 		accountService.createAccount(createAccountRequest);
 
-		verify(accountRepository).insert(createAccountRequest);
+//		verify(accountRepository).insert(createAccountRequest);
 		verify(accountMapper).accountToAccountResponse(account);
 	}
 

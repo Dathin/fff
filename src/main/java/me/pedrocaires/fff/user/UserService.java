@@ -33,39 +33,15 @@ public class UserService {
 	public User createUser(CreateUserRequest createUserRequest) {
 		encryptPassword(createUserRequest);
 		try {
-			return insertNewUser(createUserRequest);
+			return userRepository.insert(createUserRequest);
 		}
 		catch (DuplicateKeyException ex) {
 			throw new UserAlreadyExistException();
-		}
-		catch (DataIntegrityViolationException ex) {
-			throw new AccountDoesNotExistException();
 		}
 	}
 
 	private void encryptPassword(CreateUserRequest createUserRequest) {
 		createUserRequest.setPassword(passwordEncoder.encode(createUserRequest.getPassword()));
-	}
-
-	private User insertNewUser(CreateUserRequest createUserRequest) {
-		var optionalAuthenticatedUser = getAuthenticatedUser();
-		if (optionalAuthenticatedUser.isPresent()) {
-			var authenticatedUser = optionalAuthenticatedUser.get();
-			return insertNewUserToAuthenticatedAccount(authenticatedUser, createUserRequest);
-		}
-		if (userRepository.countByAccountId(createUserRequest.getAccountId()) == 0) {
-			return insertFirstAccountUser(createUserRequest);
-		}
-		throw new InvalidCreateUserOnAccountException();
-	}
-
-	private User insertNewUserToAuthenticatedAccount(User authenticatedUser, CreateUserRequest createUserRequest) {
-		createUserRequest.setAccountId(authenticatedUser.getAccountId());
-		return userRepository.insert(createUserRequest);
-	}
-
-	private User insertFirstAccountUser(CreateUserRequest createUserRequest) {
-		return userRepository.insert(createUserRequest);
 	}
 
 	public String login(LoginRequest loginRequest) {

@@ -8,31 +8,19 @@ import javax.validation.constraints.Positive;
 public class LoginRequest {
 
 	@NotNull
-	@Positive
-	private Integer accountId;
-
-	@NotNull
-	@Length(min = 3, max = 50)
-	private String name;
+	@Length(min = 3, max = 320)
+	private String identifier;
 
 	@NotNull
 	@Length(min = 10, max = 50)
 	private String password;
 
-	public Integer getAccountId() {
-		return accountId;
+	public String getIdentifier() {
+		return identifier;
 	}
 
-	public void setAccountId(Integer accountId) {
-		this.accountId = accountId;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
 	}
 
 	public String getPassword() {

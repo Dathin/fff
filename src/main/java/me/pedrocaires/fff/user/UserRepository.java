@@ -6,11 +6,8 @@ import me.pedrocaires.fff.user.model.CreateUserRequest;
 import me.pedrocaires.fff.user.model.LoginRequest;
 import me.pedrocaires.fff.user.model.User;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Optional;
 
 @Repository
@@ -31,14 +28,14 @@ public class UserRepository {
 
 	public User insert(CreateUserRequest createUserRequest) {
 		return jdbcTemplate.query(
-				"INSERT INTO USERS (NAME, ACCOUNT_ID, PASSWORD) VALUES (?, ?, ?) RETURNING ID, NAME, ACCOUNT_ID, PASSWORD",
-				userResultSetExtractor.extractObject(), createUserRequest.getName(), createUserRequest.getAccountId(),
+				"INSERT INTO USERS (IDENTIFIER, PASSWORD) VALUES (?, ?) RETURNING ID, IDENTIFIER, PASSWORD",
+				userResultSetExtractor.extractObject(), createUserRequest.getIdentifier(),
 				createUserRequest.getPassword());
 	}
 
 	public Optional<User> getPasswordToLogin(LoginRequest loginRequest) {
-		return jdbcTemplate.query("SELECT * FROM USERS WHERE ACCOUNT_ID = ? AND NAME = ? LIMIT 1",
-				userResultSetExtractor.extractOptional(), loginRequest.getAccountId(), loginRequest.getName());
+		return jdbcTemplate.query("SELECT * FROM USERS WHERE IDENTIFIER = ? LIMIT 1",
+				userResultSetExtractor.extractOptional(), loginRequest.getIdentifier());
 	}
 
 	public int countByAccountId(int accountId) {

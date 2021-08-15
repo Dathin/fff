@@ -64,9 +64,9 @@ public class SwaggerConfig {
 		var mediaType = "application/json";
 
 		responseList.add(new ResponseBuilder().code("400")
-				.examples(Collections.singletonList(new Example("1", "Bad Request", "Bad Request",
-						Collections.singletonList(new FormValidationResponse("myField", "error description")), "1",
-						mediaType)))
+				.examples(
+						Collections.singletonList(new Example("3", "Server Custom Exception", "Server Custom Exception",
+								new ExceptionResponse("Custom exception description"), "4", mediaType)))
 				.build());
 
 		responseList.add(new ResponseBuilder().code("401")
@@ -75,10 +75,10 @@ public class SwaggerConfig {
 						mediaType)))
 				.build());
 
-		responseList.add(new ResponseBuilder().code("4XX")
-				.examples(
-						Collections.singletonList(new Example("3", "Server Custom Exception", "Server Custom Exception",
-								new ExceptionResponse("Custom exception description"), "4", mediaType)))
+		responseList.add(new ResponseBuilder().code("422")
+				.examples(Collections.singletonList(new Example("1", "Bad Request", "Bad Request",
+						Collections.singletonList(new FormValidationResponse("myField", "error description")), "1",
+						mediaType)))
 				.build());
 
 		responseList.add(new ResponseBuilder().code("500")

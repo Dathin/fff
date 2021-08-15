@@ -32,7 +32,7 @@ class AccountRepositoryTest {
 		var createAccountRequest = podamFactory.manufacturePojo(CreateAccountRequest.class);
 		createAccountRequest.setName("test-name");
 
-		accountRepository.insert(createAccountRequest);
+//		accountRepository.insert(createAccountRequest);
 
 		verify(jdbcTemplate).query(any(), any(ResultSetExtractor.class), eq(createAccountRequest.getName()));
 	}

@@ -3,36 +3,23 @@ package me.pedrocaires.fff.user.model;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 
 public class CreateUserRequest {
 
 	@NotNull
-	@Length(min = 3, max = 50)
-	private String name;
-
-	@NotNull
-	@Positive
-	private Integer accountId;
+	@Length(min = 3, max = 320)
+	private String identifier;
 
 	@NotNull
 	@Length(min = 10, max = 50)
 	private String password;
 
-	public String getName() {
-		return name;
+	public String getIdentifier() {
+		return identifier;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Integer getAccountId() {
-		return accountId;
-	}
-
-	public void setAccountId(Integer accountId) {
-		this.accountId = accountId;
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
 	}
 
 	public String getPassword() {

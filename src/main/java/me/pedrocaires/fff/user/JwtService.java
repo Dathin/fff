@@ -18,6 +18,10 @@ public class JwtService {
 
 	private final Key key;
 
+	public static String CLAIM_USER_ID = "userId";
+
+	public static String CLAIM_USER_EMAIL = "userEmail";
+
 	public JwtService(@Value("${jwt.key}") String jwtKey) {
 		this.key = new SecretKeySpec((jwtKey).getBytes(StandardCharsets.UTF_8), "HmacSHA256");
 	}
@@ -26,17 +30,16 @@ public class JwtService {
 		long currentTimeInMs = System.currentTimeMillis();
 		long tenMinutesInMs = 600000;
 		return Jwts.builder().setIssuedAt(new Date(currentTimeInMs))
-				.setExpiration(new Date(currentTimeInMs + tenMinutesInMs)).claim("userId", user.getId())
-				.claim("userName", user.getName()).claim("accountId", user.getAccountId()).signWith(key).compact();
+				.setExpiration(new Date(currentTimeInMs + tenMinutesInMs)).claim(CLAIM_USER_ID, user.getId())
+				.claim(CLAIM_USER_EMAIL, user.getName()).signWith(key).compact();
 	}
 
 	public UserToken validateToken(String token) {
 		try {
 			var claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
 			var userToken = new UserToken();
-			userToken.setId(claims.get("userId", Integer.class));
-			userToken.setName(claims.get("userName", String.class));
-			userToken.setAccountId(claims.get("accountId", Integer.class));
+			userToken.setId(claims.get(CLAIM_USER_ID, Integer.class));
+			userToken.setIdentifier(claims.get(CLAIM_USER_EMAIL, String.class));
 			userToken.setExpiresAt(claims.getExpiration());
 			return userToken;
 		}
