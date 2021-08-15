@@ -13,7 +13,7 @@ public class ApplicationListener {
 
 	@EventListener
 	public void onStartup(ApplicationReadyEvent event) {
-		logger.info("Swagger listening at: /swagger-ui/");
+		logger.info("Swagger listening at: http://localhost:8080/swagger-ui/index.html");
 	}
 
 }

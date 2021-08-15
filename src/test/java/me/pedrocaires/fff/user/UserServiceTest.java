@@ -1,11 +1,12 @@
 package me.pedrocaires.fff.user;
 
-import me.pedrocaires.fff.exception.alreadyexist.UserAlreadyExistException;
+import me.pedrocaires.fff.endpoint.user.*;
+import me.pedrocaires.fff.endpoint.user.model.UserAlreadyExistException;
 import me.pedrocaires.fff.exception.UserDoesNotExistException;
-import me.pedrocaires.fff.user.model.CreateUserRequest;
-import me.pedrocaires.fff.user.model.LoginRequest;
-import me.pedrocaires.fff.user.model.User;
-import me.pedrocaires.fff.user.model.UserToken;
+import me.pedrocaires.fff.endpoint.user.model.CreateUserRequest;
+import me.pedrocaires.fff.endpoint.user.model.LoginRequest;
+import me.pedrocaires.fff.endpoint.user.model.User;
+import me.pedrocaires.fff.endpoint.user.model.UserToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

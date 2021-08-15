@@ -1,10 +1,13 @@
 package me.pedrocaires.fff.project;
 
-import me.pedrocaires.fff.exception.UnauthorizedException;
-import me.pedrocaires.fff.project.models.CreateProjectRequest;
-import me.pedrocaires.fff.project.models.Project;
-import me.pedrocaires.fff.user.UserService;
-import me.pedrocaires.fff.user.model.UserToken;
+import me.pedrocaires.fff.endpoint.project.ProjectMapper;
+import me.pedrocaires.fff.endpoint.project.ProjectMapperImpl;
+import me.pedrocaires.fff.endpoint.project.ProjectRepository;
+import me.pedrocaires.fff.endpoint.project.ProjectService;
+import me.pedrocaires.fff.endpoint.project.models.CreateProjectRequest;
+import me.pedrocaires.fff.endpoint.project.models.Project;
+import me.pedrocaires.fff.endpoint.user.UserService;
+import me.pedrocaires.fff.endpoint.user.model.UserToken;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,7 +20,6 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

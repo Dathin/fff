@@ -1,7 +1,8 @@
 package me.pedrocaires.fff.user;
 
+import me.pedrocaires.fff.endpoint.user.JwtService;
 import me.pedrocaires.fff.exception.UnauthorizedException;
-import me.pedrocaires.fff.user.model.User;
+import me.pedrocaires.fff.endpoint.user.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

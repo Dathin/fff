@@ -1,11 +1,11 @@
 package me.pedrocaires.fff.account;
 
-import me.pedrocaires.fff.account.model.CreateAccountRequest;
+import me.pedrocaires.fff.endpoint.account.AccountRepository;
+import me.pedrocaires.fff.endpoint.account.model.CreateAccountRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -32,7 +32,7 @@ class AccountRepositoryTest {
 		var createAccountRequest = podamFactory.manufacturePojo(CreateAccountRequest.class);
 		createAccountRequest.setName("test-name");
 
-//		accountRepository.insert(createAccountRequest);
+		// accountRepository.insert(createAccountRequest);
 
 		verify(jdbcTemplate).query(any(), any(ResultSetExtractor.class), eq(createAccountRequest.getName()));
 	}

@@ -1,8 +1,10 @@
 package me.pedrocaires.fff.project;
 
-import me.pedrocaires.fff.project.models.CreateProjectRequest;
-import me.pedrocaires.fff.project.models.CreateProjectResponse;
-import me.pedrocaires.fff.project.models.ProjectResponse;
+import me.pedrocaires.fff.endpoint.project.ProjectController;
+import me.pedrocaires.fff.endpoint.project.ProjectService;
+import me.pedrocaires.fff.endpoint.project.models.CreateProjectRequest;
+import me.pedrocaires.fff.endpoint.project.models.CreateProjectResponse;
+import me.pedrocaires.fff.endpoint.project.models.ProjectResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,7 +18,6 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ProjectControllerTest {

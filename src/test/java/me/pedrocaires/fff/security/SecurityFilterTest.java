@@ -1,15 +1,13 @@
 package me.pedrocaires.fff.security;
 
 import me.pedrocaires.fff.exception.UnauthorizedException;
-import me.pedrocaires.fff.user.JwtService;
-import me.pedrocaires.fff.user.UserService;
-import me.pedrocaires.fff.user.model.User;
-import me.pedrocaires.fff.user.model.UserToken;
+import me.pedrocaires.fff.endpoint.user.JwtService;
+import me.pedrocaires.fff.endpoint.user.UserService;
+import me.pedrocaires.fff.endpoint.user.model.UserToken;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpHeaders;
 import uk.co.jemos.podam.api.PodamFactory;

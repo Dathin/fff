@@ -1,9 +1,11 @@
 package me.pedrocaires.fff.user;
 
-import me.pedrocaires.fff.user.model.CreateUserRequest;
-import me.pedrocaires.fff.user.model.CreateUserResponse;
-import me.pedrocaires.fff.user.model.LoginRequest;
-import me.pedrocaires.fff.user.model.LoginResponse;
+import me.pedrocaires.fff.endpoint.user.UserController;
+import me.pedrocaires.fff.endpoint.user.UserService;
+import me.pedrocaires.fff.endpoint.user.model.CreateUserRequest;
+import me.pedrocaires.fff.endpoint.user.model.CreateUserResponse;
+import me.pedrocaires.fff.endpoint.user.model.LoginRequest;
+import me.pedrocaires.fff.endpoint.user.model.LoginResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,7 +17,6 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {

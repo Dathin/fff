@@ -1,7 +1,9 @@
 package me.pedrocaires.fff.account;
 
-import me.pedrocaires.fff.account.model.CreateAccountRequest;
-import me.pedrocaires.fff.account.model.CreateAccountResponse;
+import me.pedrocaires.fff.endpoint.account.AccountController;
+import me.pedrocaires.fff.endpoint.account.AccountService;
+import me.pedrocaires.fff.endpoint.account.model.CreateAccountRequest;
+import me.pedrocaires.fff.endpoint.account.model.CreateAccountResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,7 +15,6 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AccountControllerTest {

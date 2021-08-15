@@ -39,9 +39,17 @@ public class ExceptionController {
 		ex.getBindingResult().getAllErrors().forEach(objectError -> {
 			var fieldError = objectError instanceof FieldError ? ((FieldError) objectError).getField()
 					: ex.getObjectName();
-			formValidationResponse.put(fieldError, objectError.getDefaultMessage());
+			formValidationResponse.put(fieldError,
+					capitalizeFirstLetterOfErrorMessage(objectError.getDefaultMessage()));
 		});
 		return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(formValidationResponse);
+	}
+
+	private String capitalizeFirstLetterOfErrorMessage(String errorMessage) {
+		if (errorMessage != null) {
+			return errorMessage.substring(0, 1).toUpperCase() + errorMessage.substring(1);
+		}
+		return errorMessage;
 	}
 
 	private ResponseEntity<ExceptionResponse> buildDefaultExceptionResponseEntity(Exception ex, String message,
