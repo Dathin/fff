@@ -16,6 +16,7 @@ public class UserResultSetExtractor extends EntityResultSetExtractor<User> {
 		user.setId(resultSet.getInt("ID"));
 		user.setIdentifier(resultSet.getString("IDENTIFIER"));
 		user.setPassword(resultSet.getString("PASSWORD"));
+		user.setWebClient(resultSet.getBoolean("WEB_CLIENT"));
 		return user;
 	}
 

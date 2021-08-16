@@ -1,5 +1,8 @@
 package me.pedrocaires.fff.validator;
 
+import org.hibernate.validator.constraints.br.CPF;
+import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
+import org.hibernate.validator.internal.constraintvalidators.hv.br.CPFValidator;
 import org.springframework.beans.BeanWrapperImpl;
 import org.yaml.snakeyaml.introspector.PropertyUtils;
 
@@ -7,6 +10,7 @@ import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.Payload;
+import javax.validation.constraints.Email;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -29,7 +33,6 @@ public @interface CheckAtLeastOneNotNull {
 	String[] fieldNames();
 
 	class CheckAtLeastOneNotNullValidator implements ConstraintValidator<CheckAtLeastOneNotNull, Object> {
-
 		private String[] fieldNames;
 
 		public void initialize(CheckAtLeastOneNotNull constraintAnnotation) {
@@ -38,15 +41,17 @@ public @interface CheckAtLeastOneNotNull {
 
 		public boolean isValid(Object object, ConstraintValidatorContext constraintContext) {
 			var beanWrapper = new BeanWrapperImpl(object);
-
 			var hasNotNull = false;
 
-			for (var f : fieldNames) {
-				var fieldValue = beanWrapper.getPropertyValue(f);
+
+			for (var fieldName : fieldNames) {
+				var fieldValue = beanWrapper.getPropertyValue(fieldName);
 
 				if (fieldValue != null) {
 					hasNotNull = true;
+					break;
 				}
+				constraintContext.buildConstraintViolationWithTemplate(constraintContext.getDefaultConstraintMessageTemplate()).addPropertyNode(fieldName).addConstraintViolation().disableDefaultConstraintViolation();
 			}
 
 			return hasNotNull;

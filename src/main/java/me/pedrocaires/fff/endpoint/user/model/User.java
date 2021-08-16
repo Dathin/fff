@@ -12,6 +12,8 @@ public class User implements Principal {
 
 	private String password;
 
+	private Boolean webClient;
+
 	public int getId() {
 		return id;
 	}
@@ -48,4 +50,11 @@ public class User implements Principal {
 		this.password = password;
 	}
 
+	public Boolean getWebClient() {
+		return webClient;
+	}
+
+	public void setWebClient(Boolean webClient) {
+		this.webClient = webClient;
+	}
 }

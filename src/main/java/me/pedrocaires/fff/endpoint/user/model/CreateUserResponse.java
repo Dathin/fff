@@ -6,6 +6,8 @@ public class CreateUserResponse {
 
 	private String identifier;
 
+	private boolean webClient;
+
 	public int getId() {
 		return id;
 	}
@@ -22,4 +24,11 @@ public class CreateUserResponse {
 		this.identifier = identifier;
 	}
 
+	public boolean isWebClient() {
+		return webClient;
+	}
+
+	public void setWebClient(boolean webClient) {
+		this.webClient = webClient;
+	}
 }

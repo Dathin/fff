@@ -27,9 +27,9 @@ public class UserRepository {
 
 	public User insert(CreateUserRequest createUserRequest) {
 		return jdbcTemplate.query(
-				"INSERT INTO USERS (IDENTIFIER, PASSWORD) VALUES (?, ?) RETURNING ID, IDENTIFIER, PASSWORD",
+				"INSERT INTO USERS (IDENTIFIER, PASSWORD, WEB_CLIENT) VALUES (?, ?, ?) RETURNING ID, IDENTIFIER, PASSWORD, WEB_CLIENT",
 				userResultSetExtractor.extractObject(), createUserRequest.getIdentifier(),
-				createUserRequest.getPassword());
+				createUserRequest.getPassword(), createUserRequest.isWebClient());
 	}
 
 	public Optional<User> getPasswordToLogin(LoginRequest loginRequest) {
