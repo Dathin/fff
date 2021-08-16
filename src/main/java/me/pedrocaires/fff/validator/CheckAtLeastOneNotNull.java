@@ -33,6 +33,7 @@ public @interface CheckAtLeastOneNotNull {
 	String[] fieldNames();
 
 	class CheckAtLeastOneNotNullValidator implements ConstraintValidator<CheckAtLeastOneNotNull, Object> {
+
 		private String[] fieldNames;
 
 		public void initialize(CheckAtLeastOneNotNull constraintAnnotation) {
@@ -43,7 +44,6 @@ public @interface CheckAtLeastOneNotNull {
 			var beanWrapper = new BeanWrapperImpl(object);
 			var hasNotNull = false;
 
-
 			for (var fieldName : fieldNames) {
 				var fieldValue = beanWrapper.getPropertyValue(fieldName);
 
@@ -51,7 +51,9 @@ public @interface CheckAtLeastOneNotNull {
 					hasNotNull = true;
 					break;
 				}
-				constraintContext.buildConstraintViolationWithTemplate(constraintContext.getDefaultConstraintMessageTemplate()).addPropertyNode(fieldName).addConstraintViolation().disableDefaultConstraintViolation();
+				constraintContext
+						.buildConstraintViolationWithTemplate(constraintContext.getDefaultConstraintMessageTemplate())
+						.addPropertyNode(fieldName).addConstraintViolation().disableDefaultConstraintViolation();
 			}
 
 			return hasNotNull;

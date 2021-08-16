@@ -31,4 +31,5 @@ public class CreateUserResponse {
 	public void setWebClient(boolean webClient) {
 		this.webClient = webClient;
 	}
+
 }

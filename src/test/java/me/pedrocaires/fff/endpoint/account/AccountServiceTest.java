@@ -1,4 +1,4 @@
-package me.pedrocaires.fff.account;
+package me.pedrocaires.fff.endpoint.account;
 
 import me.pedrocaires.fff.endpoint.account.AccountMapper;
 import me.pedrocaires.fff.endpoint.account.AccountMapperImpl;

@@ -1,4 +1,4 @@
-package me.pedrocaires.fff.endpoint.environment;
+package me.pedrocaires.fff.endpoint.environment.model;
 
 import me.pedrocaires.fff.exception.IntegrityException;
 

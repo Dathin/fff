@@ -1,4 +1,4 @@
-package me.pedrocaires.fff.user;
+package me.pedrocaires.fff.endpoint.user;
 
 import me.pedrocaires.fff.endpoint.user.JwtService;
 import me.pedrocaires.fff.exception.UnauthorizedException;

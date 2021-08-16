@@ -11,22 +11,19 @@ public class AccountRepository {
 
 	private final JdbcTemplate jdbcTemplate;
 
-	public AccountRepository(JdbcTemplate jdbcTemplate) {
+	private final AccountResultSetExtractor accountResultSetExtractor;
+
+	public AccountRepository(JdbcTemplate jdbcTemplate, AccountResultSetExtractor accountResultSetExtractor) {
 		this.jdbcTemplate = jdbcTemplate;
+		this.accountResultSetExtractor = accountResultSetExtractor;
 	}
 
 	@Transactional
 	public Account insert(CreateAccountRequest createAccountRequest, int userId) {
 		var insertedAccount = jdbcTemplate.query("INSERT INTO ACCOUNTS(NAME) VALUES (?) RETURNING ID, NAME",
-				resultSet -> {
-					resultSet.next();
-					var account = new Account();
-					account.setId(resultSet.getInt("ID"));
-					account.setName(resultSet.getString("NAME"));
-					return account;
-				}, createAccountRequest.getName());
+				accountResultSetExtractor.extractObject(), createAccountRequest.getName());
 
-		jdbcTemplate.update("INSERT INTO ACCOUNTS_USERS (ACCOUNT_ID, USER_ID, ROLE_ID) VALUES (?, ?, ?)",
+		jdbcTemplate.update("INSERT INTO ACCOUNTS_USERS (ACCOUNT_ID, 2, ROLE_ID) VALUES (?, ?, ?)",
 				insertedAccount.getId(), userId, 1);
 
 		return insertedAccount;

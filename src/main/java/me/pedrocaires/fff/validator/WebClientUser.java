@@ -20,24 +20,26 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface WebClientUser {
 
-    String message() default "";
+	String message() default "";
 
-    Class<?>[] groups() default {};
+	Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default {};
+	Class<? extends Payload>[] payload() default {};
 
-    class WebClientUserValidator implements ConstraintValidator<WebClientUser, IsWebClientRequest> {
+	class WebClientUserValidator implements ConstraintValidator<WebClientUser, IsWebClientRequest> {
 
-        private static final EmailValidator emailValidator = new EmailValidator();
+		private static final EmailValidator emailValidator = new EmailValidator();
 
-        public boolean isValid(IsWebClientRequest isWebClientRequest, ConstraintValidatorContext constraintContext) {
-            if(isWebClientRequest.isWebClient() && !emailValidator.isValid(isWebClientRequest.getIdentifier(), constraintContext)){
-                constraintContext.buildConstraintViolationWithTemplate("Must be valid e-mail").addPropertyNode("identifier").addConstraintViolation().disableDefaultConstraintViolation();
-                return  false;
-            }
-            return true;
-        }
+		public boolean isValid(IsWebClientRequest isWebClientRequest, ConstraintValidatorContext constraintContext) {
+			if (isWebClientRequest.isWebClient()
+					&& !emailValidator.isValid(isWebClientRequest.getIdentifier(), constraintContext)) {
+				constraintContext.buildConstraintViolationWithTemplate("Must be valid e-mail")
+						.addPropertyNode("identifier").addConstraintViolation().disableDefaultConstraintViolation();
+				return false;
+			}
+			return true;
+		}
 
-    }
+	}
 
 }

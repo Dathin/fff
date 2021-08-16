@@ -1,4 +1,4 @@
-package me.pedrocaires.fff.account;
+package me.pedrocaires.fff.endpoint.account;
 
 import me.pedrocaires.fff.endpoint.account.AccountRepository;
 import me.pedrocaires.fff.endpoint.account.model.CreateAccountRequest;
@@ -15,6 +15,7 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AccountRepositoryTest {

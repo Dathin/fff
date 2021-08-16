@@ -1,4 +1,4 @@
-package me.pedrocaires.fff.project;
+package me.pedrocaires.fff.endpoint.project;
 
 import me.pedrocaires.fff.endpoint.project.ProjectMapper;
 import me.pedrocaires.fff.endpoint.project.ProjectMapperImpl;

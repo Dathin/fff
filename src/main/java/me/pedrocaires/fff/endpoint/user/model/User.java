@@ -57,4 +57,5 @@ public class User implements Principal {
 	public void setWebClient(Boolean webClient) {
 		this.webClient = webClient;
 	}
+
 }

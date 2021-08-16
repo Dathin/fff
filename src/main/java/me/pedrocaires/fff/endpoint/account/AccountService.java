@@ -1,6 +1,7 @@
 package me.pedrocaires.fff.endpoint.account;
 
 import me.pedrocaires.fff.endpoint.account.model.Account;
+import me.pedrocaires.fff.endpoint.account.model.AccountAlreadyExistException;
 import me.pedrocaires.fff.endpoint.account.model.CreateAccountRequest;
 import me.pedrocaires.fff.endpoint.user.UserService;
 import org.springframework.dao.DuplicateKeyException;

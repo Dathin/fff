@@ -1,4 +1,4 @@
-package me.pedrocaires.fff.project;
+package me.pedrocaires.fff.endpoint.project;
 
 import me.pedrocaires.fff.endpoint.project.ProjectController;
 import me.pedrocaires.fff.endpoint.project.ProjectService;

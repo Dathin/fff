@@ -1,4 +1,4 @@
-package me.pedrocaires.fff.endpoint.account;
+package me.pedrocaires.fff.endpoint.account.model;
 
 import me.pedrocaires.fff.exception.AlreadyExistException;
 

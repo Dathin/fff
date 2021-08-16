@@ -1,4 +1,4 @@
-package me.pedrocaires.fff.endpoint.featureflag;
+package me.pedrocaires.fff.endpoint.featureflag.model;
 
 import me.pedrocaires.fff.exception.AlreadyExistException;
 
