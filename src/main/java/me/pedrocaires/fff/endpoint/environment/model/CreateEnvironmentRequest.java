@@ -18,6 +18,9 @@ public class CreateEnvironmentRequest {
 	@NotNull
 	private Boolean forMe;
 
+	@NotNull
+	private Boolean main;
+
 	public String getName() {
 		return name;
 	}
@@ -40,6 +43,18 @@ public class CreateEnvironmentRequest {
 
 	public void setForMe(Boolean forMe) {
 		this.forMe = forMe;
+	}
+
+	public Boolean getForMe() {
+		return forMe;
+	}
+
+	public Boolean getMain() {
+		return main;
+	}
+
+	public void setMain(Boolean main) {
+		this.main = main;
 	}
 
 }

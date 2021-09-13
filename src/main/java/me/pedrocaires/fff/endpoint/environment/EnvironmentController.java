@@ -32,13 +32,8 @@ public class EnvironmentController {
 	public ResponseEntity<CreateEnvironmentResponse> createEnvironment(
 			@Valid @RequestBody CreateEnvironmentRequest createEnvironmentRequest) {
 		var userToken = userService.getOrThrowAuthenticatedUser();
-		var createdEnvironment = environmentService.createEnvironment(createEnvironmentRequest, userToken);
+		var createdEnvironment = environmentService.createEnvironment(createEnvironmentRequest, userToken.getId());
 		return ResponseEntity.ok(environmentMapper.environmentToCreateEnvironmentResponse(createdEnvironment));
 	}
-
-	// @GetMapping
-	// public ResponseEntity<List<EnvironmentResponse>> getEnvironments() {
-	// return ResponseEntity.ok(environmentService.getEnvironments());
-	// }
 
 }

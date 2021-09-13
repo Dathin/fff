@@ -20,7 +20,7 @@ public class EnvironmentRepository {
 
 	public Environment insert(CreateEnvironmentRequest createEnvironmentRequest, Integer userId) {
 		return jdbcTemplate.query(
-				"INSERT INTO ENVIRONMENTS (NAME, PROJECT_ID, USER_ID) VALUES (?, ?, ?) RETURNING ID, NAME, PROJECT_ID, USER_ID",
+				"INSERT INTO ENVIRONMENTS (NAME, PROJECT_ID, MAIN, USER_ID) VALUES (?, ?, ?, ?) RETURNING ID, NAME, PROJECT_ID, MAIN, USER_ID",
 				resultSet -> {
 					resultSet.next();
 					var environment = new Environment();
@@ -28,14 +28,16 @@ public class EnvironmentRepository {
 					environment.setName(resultSet.getString("NAME"));
 					environment.setProjectId(resultSet.getInt("PROJECT_ID"));
 					environment.setUserId(resultSet.getInt("USER_ID"));
+					environment.setMain(resultSet.getBoolean("MAIN"));
 					return environment;
-				}, createEnvironmentRequest.getName(), createEnvironmentRequest.getProjectId(), userId);
+				}, createEnvironmentRequest.getName(), createEnvironmentRequest.getProjectId(),
+				createEnvironmentRequest.getMain(), userId);
 	}
 
-	public boolean isFromAccountId(int environmentId, int accountId) {
+	public boolean isFromAccountId(int userId, int environmentId) {
 		return jdbcTemplate.query(
-				"SELECT EXISTS (SELECT 1 FROM ENVIRONMENTS AS E INNER JOIN PROJECTS AS P ON E.PROJECT_ID = P.ID WHERE E.ID = ? AND P.ACCOUNT_ID = ?)",
-				existsCallbackHandler, environmentId, accountId);
+				"SELECT EXISTS (SELECT 1 FROM USER_FEATURE_FLAG WHERE USER_ID = ? AND ENVIRONMENT_ID = ?)",
+				existsCallbackHandler, userId, environmentId);
 	}
 
 }

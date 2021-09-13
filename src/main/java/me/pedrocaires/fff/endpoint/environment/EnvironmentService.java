@@ -2,10 +2,11 @@ package me.pedrocaires.fff.endpoint.environment;
 
 import me.pedrocaires.fff.endpoint.environment.model.Environment;
 import me.pedrocaires.fff.endpoint.environment.model.CreateEnvironmentRequest;
-import me.pedrocaires.fff.endpoint.project.ProjectIntegrityException;
-import me.pedrocaires.fff.endpoint.project.ProjectService;
-import me.pedrocaires.fff.endpoint.user.UserService;
-import me.pedrocaires.fff.endpoint.user.model.UserToken;
+import me.pedrocaires.fff.endpoint.environment.model.EnvironmentIntegrityException;
+import me.pedrocaires.fff.endpoint.environment.model.MainEnvironmentAlreadyExistsException;
+import me.pedrocaires.fff.endpoint.project.ProjectRepository;
+
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,37 +14,31 @@ public class EnvironmentService {
 
 	private final EnvironmentRepository environmentRepository;
 
-	private final ProjectService projectService;
+	private final ProjectRepository projectRepository;
 
-	public EnvironmentService(EnvironmentRepository environmentRepository, EnvironmentMapper environmentMapper,
-			UserService userService, ProjectService projectService) {
+	public EnvironmentService(EnvironmentRepository environmentRepository, ProjectRepository projectRepository) {
 		this.environmentRepository = environmentRepository;
-		this.projectService = projectService;
+		this.projectRepository = projectRepository;
 	}
 
-	public Environment createEnvironment(CreateEnvironmentRequest createEnvironmentRequest, UserToken userToken) {
-		if (projectService.isFromAccountId(createEnvironmentRequest.getProjectId(), userToken.getAccountId())) {
-			final Environment environment;
-			if (createEnvironmentRequest.isForUser()) {
-				environment = environmentRepository.insert(createEnvironmentRequest, userToken.getId());
+	public Environment createEnvironment(CreateEnvironmentRequest createEnvironmentRequest, int userId) {
+		try {
+			if (projectRepository.isFromUser(createEnvironmentRequest.getProjectId(), userId)) {
+				return environmentRepository.insert(createEnvironmentRequest,
+						createEnvironmentRequest.isForUser() ? userId : null);
 			}
-			else {
-				environment = environmentRepository.insert(createEnvironmentRequest, null);
+		} catch(DuplicateKeyException ex) {
+			if(ex.getMessage().contains("environment_project_id_main")) {
+				throw new MainEnvironmentAlreadyExistsException();
 			}
-			return environment;
+			throw ex;
 		}
-		throw new ProjectIntegrityException();
+
+		throw new EnvironmentIntegrityException();
 	}
 
 	public boolean isFromAccountId(int environmentId, int accountId) {
 		return environmentRepository.isFromAccountId(environmentId, accountId);
 	}
-
-	// public List<EnvironmentResponse> getEnvironments() {
-	// var accountId =
-	// userService.getAuthenticatedUser().orElseThrow(UnauthorizedException::new).getAccountId();
-	// var environments = environmentRepository.getEnvironmentByAccountId();
-	// return environmentMapper.environmentsToEnvironmentsResponse(environments);
-	// }
 
 }

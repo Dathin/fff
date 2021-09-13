@@ -28,7 +28,7 @@ public class JwtService {
 
 	public String issueToken(User user) {
 		long currentTimeInMs = System.currentTimeMillis();
-		long tenMinutesInMs = 600000;
+		long tenMinutesInMs = 6000000;
 		return Jwts.builder().setIssuedAt(new Date(currentTimeInMs))
 				.setExpiration(new Date(currentTimeInMs + tenMinutesInMs)).claim(CLAIM_USER_ID, user.getId())
 				.claim(CLAIM_USER_EMAIL, user.getName()).signWith(key).compact();

@@ -5,7 +5,7 @@ import me.pedrocaires.fff.exception.IntegrityException;
 public class EnvironmentIntegrityException extends IntegrityException {
 
 	public EnvironmentIntegrityException() {
-		super("Environment name");
+		super("environment", "project");
 	}
 
 }

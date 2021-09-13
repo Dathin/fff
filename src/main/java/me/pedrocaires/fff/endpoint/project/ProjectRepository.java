@@ -24,20 +24,27 @@ public class ProjectRepository {
 		this.projectResultSetExtractor = projectResultSetExtractor;
 	}
 
-	public List<Project> getProjectsByAccountId(int accountId) {
-		return jdbcTemplate.query("SELECT ID, NAME, ACCOUNT_ID FROM PROJECTS WHERE ACCOUNT_ID = ?",
-				projectResultSetExtractor.extractList(), accountId);
+	public List<Project> getProjectsByAccountId(Integer accountId, int userId) {
+		return jdbcTemplate.query("SELECT PROJECT_ID AS ID, PROJECT_NAME AS NAME, ACCOUNT_ID FROM USER_FEATURE_FLAG WHERE ACCOUNT_ID = ? AND USER_ID = ?",
+				projectResultSetExtractor.extractList(), accountId, userId);
 	}
 
-	public Project insert(CreateProjectRequest createProjectRequest, int accountId) {
+	public Project insert(CreateProjectRequest createProjectRequest) {
 		return jdbcTemplate.query(
 				"INSERT INTO PROJECTS (NAME, ACCOUNT_ID) VALUES (?, ?) RETURNING ID, NAME, ACCOUNT_ID",
-				projectResultSetExtractor.extractObject(), createProjectRequest.getName(), accountId);
+				projectResultSetExtractor.extractObject(), createProjectRequest.getName(),
+				createProjectRequest.getAccountId());
 	}
 
 	public boolean isFromAccountId(int projectId, int accountId) {
 		return jdbcTemplate.query("SELECT EXISTS ( SELECT 1 FROM PROJECTS WHERE ID = ? AND ACCOUNT_ID = ?)",
 				existsCallbackHandler, projectId, accountId);
+	}
+
+	public boolean isFromUser(int projectId, int userId) {
+		return jdbcTemplate.query(
+				"SELECT EXISTS ( SELECT 1 FROM PROJECTS AS P INNER JOIN ACCOUNTS AS A ON P.ACCOUNT_ID = A.ID INNER JOIN ACCOUNTS_USERS AS AU ON A.ID = AU.ACCOUNT_ID WHERE P.ID = ? AND AU.USER_ID = ?)",
+				existsCallbackHandler, projectId, userId);
 	}
 
 }

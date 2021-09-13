@@ -30,8 +30,8 @@ public class FeatureFlagController {
 	@PostMapping
 	public ResponseEntity<CreateFeatureFlagResponse> createFeatureFlag(
 			@Valid @RequestBody CreateFeatureFlagRequest createFeatureFlagRequest) {
-		var accountId = userService.getOrThrowAuthenticatedUser().getAccountId();
-		var createdFeatureFlag = featureFlagService.createFeatureFlag(createFeatureFlagRequest, accountId);
+		var userId = userService.getOrThrowAuthenticatedUser().getId();
+		var createdFeatureFlag = featureFlagService.createFeatureFlag(createFeatureFlagRequest, userId);
 		return ResponseEntity.ok(featureFlagMapper.featureFlagToCreateFeatureFlagResponse(createdFeatureFlag));
 	}
 

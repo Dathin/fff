@@ -13,25 +13,25 @@
     <version>1.0.0</version>
     <name>Free Feature Flag</name>
     <description>A Feature Flag Backend</description>
-    <properties>
-        <java.version>11</java.version>
-        <postgres.version>42.2.20</postgres.version>
-        <jsonwebtoken.version>0.11.2</jsonwebtoken.version>
-        <swagger.version>3.0.0</swagger.version>
-        <mapstruct.version>1.4.2.Final</mapstruct.version>
-        <maven-compiler.version>3.8.1</maven-compiler.version>
-        <maven-surefire.version>2.21.0</maven-surefire.version>
-        <junit.version>5.7.2</junit.version>
-        <junit-surefire.version>1.2.0</junit-surefire.version>
-        <mockito.version>3.10.0</mockito.version>
-        <jacoco.version>0.8.7</jacoco.version>
-        <podam.version>7.2.7.RELEASE</podam.version>
-        <java-format.version>0.0.28</java-format.version>
-        <sonar.projectKey>Dathin_fff</sonar.projectKey>
-        <sonar.organization>dathin</sonar.organization>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.exclusions>src/**/model/*.java</sonar.exclusions>
-    </properties>
+        <properties>
+            <java.version>11</java.version>
+            <postgres.version>42.2.20</postgres.version>
+            <jsonwebtoken.version>0.11.2</jsonwebtoken.version>
+            <swagger.version>3.0.0</swagger.version>
+            <mapstruct.version>1.4.2.Final</mapstruct.version>
+            <maven-compiler.version>3.8.1</maven-compiler.version>
+            <maven-surefire.version>2.21.0</maven-surefire.version>
+            <junit.version>5.7.2</junit.version>
+            <junit-surefire.version>1.2.0</junit-surefire.version>
+            <mockito.version>3.10.0</mockito.version>
+            <jacoco.version>0.8.7</jacoco.version>
+            <podam.version>7.2.7.RELEASE</podam.version>
+            <java-format.version>0.0.28</java-format.version>
+            <sonar.projectKey>Dathin_fff</sonar.projectKey>
+            <sonar.organization>dathin</sonar.organization>
+            <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+            <sonar.exclusions>src/**/model/*.java</sonar.exclusions>
+        </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>

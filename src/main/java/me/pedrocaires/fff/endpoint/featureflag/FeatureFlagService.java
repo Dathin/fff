@@ -1,11 +1,12 @@
 package me.pedrocaires.fff.endpoint.featureflag;
 
+import me.pedrocaires.fff.endpoint.environment.EnvironmentRepository;
 import me.pedrocaires.fff.endpoint.environment.EnvironmentService;
 import me.pedrocaires.fff.endpoint.featureflag.model.CreateFeatureFlagRequest;
 import me.pedrocaires.fff.endpoint.featureflag.model.FeatureFlag;
 import me.pedrocaires.fff.endpoint.featureflag.model.FeatureFlagAlreadyExistException;
+import me.pedrocaires.fff.endpoint.featureflag.model.FeatureFlagDoesNotExistException;
 import me.pedrocaires.fff.endpoint.featureflag.model.FeatureFlagRequest;
-import me.pedrocaires.fff.exception.FeatureFlagDoesNotExistException;
 import me.pedrocaires.fff.endpoint.environment.model.EnvironmentIntegrityException;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DuplicateKeyException;
@@ -16,17 +17,18 @@ public class FeatureFlagService {
 
 	private final FeatureFlagRepository featureFlagRepository;
 
-	private final EnvironmentService environmentService;
+	private final EnvironmentRepository environmentRepository;
 
-	public FeatureFlagService(FeatureFlagRepository featureFlagRepository, EnvironmentService environmentService) {
+	public FeatureFlagService(FeatureFlagRepository featureFlagRepository, EnvironmentService environmentService,
+			EnvironmentRepository environmentRepository) {
 		this.featureFlagRepository = featureFlagRepository;
-		this.environmentService = environmentService;
+		this.environmentRepository = environmentRepository;
 	}
 
-	public FeatureFlag createFeatureFlag(CreateFeatureFlagRequest createFeatureFlagRequest, int accountId) {
+	public FeatureFlag createFeatureFlag(CreateFeatureFlagRequest createFeatureFlagRequest, int userId) {
 		// inserir em todos os envs e quando criar um env novo criar tudinho dnv
 		try {
-			if (environmentService.isFromAccountId(createFeatureFlagRequest.getEnvironmentId(), accountId)) {
+			if (environmentRepository.isFromAccountId(userId, createFeatureFlagRequest.getEnvironmentId())) {
 				return featureFlagRepository.createFeatureFlag(createFeatureFlagRequest);
 			}
 		}

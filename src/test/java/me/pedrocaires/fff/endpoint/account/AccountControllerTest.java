@@ -1,7 +1,5 @@
 package me.pedrocaires.fff.endpoint.account;
 
-import me.pedrocaires.fff.endpoint.account.AccountController;
-import me.pedrocaires.fff.endpoint.account.AccountService;
 import me.pedrocaires.fff.endpoint.account.model.CreateAccountRequest;
 import me.pedrocaires.fff.endpoint.account.model.CreateAccountResponse;
 import org.junit.jupiter.api.Test;

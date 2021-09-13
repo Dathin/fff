@@ -1,8 +1,7 @@
 package me.pedrocaires.fff.endpoint.user;
 
-import me.pedrocaires.fff.endpoint.user.*;
 import me.pedrocaires.fff.endpoint.user.model.UserAlreadyExistException;
-import me.pedrocaires.fff.exception.UserDoesNotExistException;
+import me.pedrocaires.fff.endpoint.user.model.UserDoesNotExistException;
 import me.pedrocaires.fff.endpoint.user.model.CreateUserRequest;
 import me.pedrocaires.fff.endpoint.user.model.LoginRequest;
 import me.pedrocaires.fff.endpoint.user.model.User;

@@ -7,6 +7,8 @@ import me.pedrocaires.fff.endpoint.user.UserService;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AccountService {
 
@@ -26,6 +28,10 @@ public class AccountService {
 		catch (DuplicateKeyException ex) {
 			throw new AccountAlreadyExistException();
 		}
+	}
+
+	public List<Account> getAccountsFromUserId(int userId){
+		return accountRepository.getAccountsFromUserId(userId);
 	}
 
 }

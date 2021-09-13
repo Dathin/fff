@@ -2,7 +2,7 @@ package me.pedrocaires.fff.endpoint.user;
 
 import me.pedrocaires.fff.endpoint.user.model.*;
 import me.pedrocaires.fff.exception.*;
-import me.pedrocaires.fff.exception.UserDoesNotExistException;
+
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

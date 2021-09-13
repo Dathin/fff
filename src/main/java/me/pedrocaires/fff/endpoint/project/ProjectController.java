@@ -27,17 +27,17 @@ public class ProjectController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<ProjectResponse>> getProjects() {
-		var accountId = userService.getOrThrowAuthenticatedUser().getAccountId();
-		var projects = projectService.getProjectsFromAccountId(accountId);
+	public ResponseEntity<List<ProjectResponse>> getProjects(Integer accountId) {
+		var userId = userService.getOrThrowAuthenticatedUser().getId();
+		var projects = projectService.getProjectsFromAccountId(accountId, userId);
 		return ResponseEntity.ok(projectMapper.projectsToProjectsResponse(projects));
 	}
 
 	@PostMapping
 	public ResponseEntity<CreateProjectResponse> createProject(
 			@Valid @RequestBody CreateProjectRequest createProjectRequest) {
-		var accountId = userService.getOrThrowAuthenticatedUser().getAccountId();
-		var createdProject = projectService.createProjectForAccountId(createProjectRequest, accountId);
+		var user = userService.getOrThrowAuthenticatedUser();
+		var createdProject = projectService.createProjectForUser(createProjectRequest, user.getId());
 		return ResponseEntity.ok(projectMapper.projectToCreateProjectResponse(createdProject));
 	}
 

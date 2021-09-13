@@ -1,12 +1,11 @@
 package me.pedrocaires.fff.exception;
 
-import me.pedrocaires.fff.exception.CustomException;
 import org.springframework.http.HttpStatus;
 
 public abstract class IntegrityException extends CustomException {
 
-	protected IntegrityException(String entity) {
-		super(String.format("The %s must be from an account you belong to", entity), HttpStatus.BAD_REQUEST);
+	protected IntegrityException(String entity, String relation) {
+		super(String.format("The %s must be from an %s you belong to", entity, relation), HttpStatus.BAD_REQUEST);
 	}
 
 }

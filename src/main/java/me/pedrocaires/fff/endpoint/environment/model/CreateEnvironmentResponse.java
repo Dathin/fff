@@ -1,5 +1,6 @@
 package me.pedrocaires.fff.endpoint.environment.model;
 
+
 public class CreateEnvironmentResponse {
 
 	private int id;
@@ -8,7 +9,9 @@ public class CreateEnvironmentResponse {
 
 	private int projectId;
 
-	private int userId;
+	private Integer userId;
+
+	private Boolean main;
 
 	public int getId() {
 		return id;
@@ -34,12 +37,20 @@ public class CreateEnvironmentResponse {
 		this.projectId = projectId;
 	}
 
-	public int getUserId() {
+	public Integer getUserId() {
 		return userId;
 	}
 
-	public void setUserId(int userId) {
+	public void setUserId(Integer userId) {
 		this.userId = userId;
+	}
+
+	public Boolean getMain() {
+		return main;
+	}
+
+	public void setMain(Boolean main) {
+		this.main = main;
 	}
 
 }
