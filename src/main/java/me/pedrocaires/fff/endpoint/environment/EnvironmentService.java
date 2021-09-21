@@ -1,10 +1,14 @@
 package me.pedrocaires.fff.endpoint.environment;
 
 import me.pedrocaires.fff.endpoint.environment.model.Environment;
+import me.pedrocaires.fff.daoutils.DuplicateKeyHandler;
+import me.pedrocaires.fff.daoutils.model.DuplicateKeyHandlerRequest;
 import me.pedrocaires.fff.endpoint.environment.model.CreateEnvironmentRequest;
 import me.pedrocaires.fff.endpoint.environment.model.EnvironmentIntegrityException;
 import me.pedrocaires.fff.endpoint.environment.model.MainEnvironmentAlreadyExistsException;
 import me.pedrocaires.fff.endpoint.project.ProjectRepository;
+
+import java.util.Arrays;
 
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -16,9 +20,13 @@ public class EnvironmentService {
 
 	private final ProjectRepository projectRepository;
 
-	public EnvironmentService(EnvironmentRepository environmentRepository, ProjectRepository projectRepository) {
+	private final DuplicateKeyHandler duplicateKeyHandler;
+
+
+	public EnvironmentService(EnvironmentRepository environmentRepository, ProjectRepository projectRepository, DuplicateKeyHandler duplicateKeyHandler) {
 		this.environmentRepository = environmentRepository;
 		this.projectRepository = projectRepository;
+		this.duplicateKeyHandler = duplicateKeyHandler;
 	}
 
 	public Environment createEnvironment(CreateEnvironmentRequest createEnvironmentRequest, int userId) {
@@ -28,10 +36,7 @@ public class EnvironmentService {
 						createEnvironmentRequest.isForUser() ? userId : null);
 			}
 		} catch(DuplicateKeyException ex) {
-			if(ex.getMessage().contains("environment_project_id_main")) {
-				throw new MainEnvironmentAlreadyExistsException();
-			}
-			throw ex;
+			duplicateKeyHandler.handleDuplicateKey(Arrays.asList(new DuplicateKeyHandlerRequest("environment_project_id_main", new MainEnvironmentAlreadyExistsException())), ex);
 		}
 
 		throw new EnvironmentIntegrityException();
