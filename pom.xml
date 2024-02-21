@@ -15,7 +15,7 @@
     <description>A Feature Flag Backend</description>
     <properties>
         <java.version>11</java.version>
-        <postgres.version>42.2.20</postgres.version>
+        <postgres.version>42.3.9</postgres.version>
         <jsonwebtoken.version>0.11.2</jsonwebtoken.version>
         <swagger.version>3.0.0</swagger.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
